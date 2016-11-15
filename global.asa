@@ -1,0 +1,29 @@
+<SCRIPT RUNAT=Server LANGUAGE=JScript>
+
+function Session_OnStart(){
+  Session.CodePage=1251
+  Session.Timeout=120
+  Server.ScriptTimeOut=10
+  Session.LCID=1049 
+  Session.Contents('Connection')=new ActiveXObject("ADODB.Connection");
+//  Session.Contents('ConStr')="Provider=SQLOLEDB.1;Initial Catalog=fa;Data Source=DELL-VOSTRO;General Timeout=600"
+  //Session.Contents('ConStr')="Provider=SQLOLEDB.1;Data Source=liveline.ddns.mksat.net;General Timeout=600;Initial Catalog="
+  //Session.Contents('ConStr')="Provider=SQLOLEDB.1;Data Source=WIN2K12-DB;General Timeout=600;Initial Catalog="
+  //Session.Contents('ConStr')="Provider=SQLOLEDB.1;Data Source=127.0.0.1;General Timeout=600;Initial Catalog="
+  //Session.Contents('ConStr')="Provider=SQLOLEDB.1;Data Source=192.168.0.1;General Timeout=600;Initial Catalog="
+  Session.Contents('ConStr')="Provider=SQLOLEDB.1;Data Source=192.168.0.1;General Timeout=600;Initial Catalog="
+  Session.Contents('UserId')=''
+  //Session.Contents('Database')='fa'
+  Session.Contents('Password')=''
+  Session.Contents('RecCount')=100
+  Session.Contents('UseImg')=1
+  Session.Contents('Style')='style2.css'
+  Session.Contents('since')=new Date().setDate(1);
+  Session.Contents('till')=new Date().setDate(31);
+}
+
+function Session_OnEnd() {
+var conn=Session.Contents('Connection');
+if ((conn!=null)&&(conn.state>0)) conn.close();
+}
+</SCRIPT>
