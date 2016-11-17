@@ -136,17 +136,18 @@ function getv(e,p,c)
 
   for(var e=0;e<qelev;e++)
   {
+  	var priceInd = 0;
     for (var p=1;p<=3;p++)
     {
       var skip = true;
       for(var c=0;c<qcol;c++)
       {
         var v=getv(elevator[e].key,p,culture[c].key);
-        if (v>0) {skip=false; break;}
+        if (v>0) {skip=false; priceInd=priceInd==0?p:-1; break;}
       }
 
       if (!skip) {
-    %><tr class="p<%=p%>"><td><%=p==1?elevator[e].value:''%></td><td>цена <%=p%></td><%
+    %><tr class="p<%=p%>"><td><%=priceInd==p?elevator[e].value:''%></td><td>цена <%=p%></td><%
       for(var c=0;c<qcol;c++)
       {
         var v=getv(elevator[e].key,p,culture[c].key);
@@ -181,7 +182,6 @@ function getv(e,p,c)
 <th>Культура</th>
 <th>Цена 1</th>
 <th>Цена 2</th>
-<th>Цена 3</th>
 <th>Количество</th>
 </tr>
 </thead>
@@ -190,8 +190,13 @@ function getv(e,p,c)
     rs=rs.NextRecordset;
     while (!rs.eof) 
     {
-%><tr><td><%=rs("portname").value%></td><td><%=rs("tradername").value%></td><td><%=rs("culturename").value%></td><td class="digit"><%=rs("price1").value%></td><td class="digit"><%=rs("price2").value%></td>
-<td class="digit"><%=rs("price3").value%></td><td class="digit"><%=rs("amount").value%></td><%
+%><tr>
+		<td><%=rs("portname").value%></td>
+		<td><%=rs("tradername").value%></td>
+		<td><%=rs("culturename").value%></td>
+		<td class="digit"><%=rs("price1").value%></td>
+		<td class="digit"><%=rs("price2").value%></td>
+		<td class="digit"><%=rs("amount").value%></td><%
 %></tr><%
       rs.MoveNext();
     };
@@ -221,7 +226,6 @@ function getv(e,p,c)
 <th>Культура</th>
 <th>Цена 1</th>
 <th>Цена 2</th>
-<th>Цена 3</th>
 <th>Сроки</th>
 <th>Осталось тонн</th>
 <th>Валютная цена</th>
@@ -232,8 +236,15 @@ function getv(e,p,c)
     rs=rs.NextRecordset;
     while (!rs.eof) 
     {
-%><tr><td><%=rs("portname").value%></td><td><%=rs("tradername").value%></td><td><%=rs("culturename").value%></td><td class="digit"><%=rs("price1").value%></td>
-<td class="digit"><%=rs("price2").value%></td><td class="digit"><%=rs("price3").value%></td><td><%=dateToStr(rs("since").value)%> - <%=dateToStr(rs("till").value)%></td><td class="digit"><%=rs("kol").value%></td><td class="digit"><%=rs("priceval").value%></td><%
+%><tr>
+	<td><%=rs("portname").value%></td>
+	<td><%=rs("tradername").value%></td>
+	<td><%=rs("culturename").value%></td>
+	<td class="digit"><%=rs("price1").value%></td>
+	<td class="digit"><%=rs("price2").value%></td>
+	<td><%=dateToStr(rs("since").value)%> - <%=dateToStr(rs("till").value)%></td>
+	<td class="digit"><%=rs("kol").value%></td>
+	<td class="digit"><%=rs("priceval").value%></td><%
 %></tr><%
       rs.MoveNext();
     };

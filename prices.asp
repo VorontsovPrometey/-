@@ -153,10 +153,11 @@ function getv(e,p,c)
     for (var p=1;p<=3;p++)
     {
       var skip = true;
+	  var priceInd = 0;
       for(var c=0;c<qcol;c++)
       {
         var v=getv(elevator[e].key,p,culture[c].key);
-        if (v.v>0) {skip=false; break;}
+        if (v.v>0) {skip=false; priceInd=priceInd==0?p:-1; break;}
       }
 
       if (!skip) {
@@ -164,7 +165,7 @@ function getv(e,p,c)
 			}	else	if (elevator[e].sequence >= 100 && elevator[e].sequence < 200){%><tr class="lineKir<%=p%>"><%
 			}	else	if (elevator[e].sequence >= 200)		 {%><tr class="lineZap<%=p%>"><%
 			}%>
-			<td><%=p==1?elevator[e].value:''%></td>
+			<td><%=priceInd==p?elevator[e].value:''%></td>
 			<td>цена <%=p%></td><%
 			  for(var c=0;c<qcol;c++)
 			  {
@@ -191,7 +192,6 @@ function getv(e,p,c)
 <col class="digit" width="10%"/>
 <col class="digit" width="10%"/>
 <col class="digit" width="10%"/>
-<col class="digit" width="10%"/>
 </colgroup>
 <thead>
 <tr>
@@ -200,7 +200,6 @@ function getv(e,p,c)
 <th>Культура</th>
 <th>Цена 1</th>
 <th>Цена 2</th>
-<th>Цена 3</th>
 <th>Количество</th>
 </tr>
 </thead>
@@ -215,7 +214,6 @@ function getv(e,p,c)
 		<td><%=rs("culturename").value%></td>
 		<td class="digit"><%=rs("price1").value%></td>
 		<td class="digit"><%=rs("price2").value%></td>
-		<td class="digit"><%=rs("price3").value%></td>
 		<td class="digit"><%=rs("amount").value%></td><%
 %></tr><%
       rs.MoveNext();
@@ -237,7 +235,6 @@ function getv(e,p,c)
 <col class="digit" width="10%"/>
 <col class="digit" width="10%"/>
 <col class="digit" width="10%"/>
-<col class="digit" width="10%"/>
 </colgroup>
 <thead>
 <tr>
@@ -246,7 +243,6 @@ function getv(e,p,c)
 <th>Культура</th>
 <th>Цена 1</th>
 <th>Цена 2</th>
-<th>Цена 3</th>
 <th>Сроки</th>
 <th>Осталось тонн</th>
 <th>Валютная цена</th>
@@ -263,7 +259,6 @@ function getv(e,p,c)
 		<td><%=rs("culturename").value%></td>
 		<td class="digit"><%=rs("price1").value%></td>
 		<td class="digit"><%=rs("price2").value%></td>
-		<td class="digit"><%=rs("price3").value%></td>
 		<td><%=dateToStr(rs("since").value)%> - <p class="c1"><%=dateToStr(rs("till").value)%></p></td>
 		<td class="digit"><%=rs("kol").value%></td>
 		<td class="digit"><%=rs("priceval").value%></td><%
