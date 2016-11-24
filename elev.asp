@@ -67,6 +67,8 @@ var items5 = new Array();
   var skk42='';
   var price42='';
   var avgprice='';
+  var avgpriceNDS='';
+
 // выполняем и запоминаем
   var conn=null;
   var sql="exec repElevatorsRests "+psince+","+ptill+","+pgoods+","+ptype;
@@ -86,6 +88,7 @@ var items5 = new Array();
       inp=1*rs('inp').value;
       sks=Math.round(amountplus!=0?1*rs('sks').value/amountplus:0);
       avgprice=1*rs('avgprice').value;
+	  avgpriceNDS=1.2*rs('avgprice').value;
       snk42=1*rs('snk42').value;
       skk42=1*rs('skk42').value;
       price42=1*rs('price42').value;
@@ -128,7 +131,8 @@ var items5 = new Array();
     while (!rs.eof) 
     {
       var d = rs('amount2').value-rs('amount1').value;
-      var ss = rs('amount2').value!=0?Math.round(1.0*rs('sks').value/rs('amount2').value):0;
+      var ss = rs('avgprice').value!=0?Math.round(1.0*rs('avgprice').value):0;
+	  var priceNDS = Math.round(ss * 1.2);
       var ename = rs('elevatorname').value;
       %>items1[<%=i%>]=new ai(<%=i%>,<%=rs('amount1').value%>,'<%=ename%>');
 <%
@@ -137,6 +141,8 @@ var items5 = new Array();
       %>items3[<%=i%>]=new ai(<%=i%>,<%=rs('inp').value%>,'<%=ename%>');
 <%
       %>items4[<%=i%>]=new ai(<%=i%>,<%=ss%>,'<%=ename%>');
+<%      
+	  %>items5[<%=i%>]=new ai(<%=i%>,<%=priceNDS%>,'<%=ename%>');
 <%
       i++;
       rs.MoveNext();
@@ -184,13 +190,15 @@ var items5 = new Array();
       data: [
       {        
         type: "bar",  
-	indexLabelFontSize: 16,
+		indexLabelFontSize: 16,
+		indexLabelFontColor: "black",
         showInLegend: true, 
         legendText: "Остатки на <%=since%>: <%=amount1%> т",
         dataPoints: items1      },
       {        
         type: "bar",  
-	indexLabelFontSize: 16,
+		indexLabelFontSize: 16,
+		indexLabelFontColor: "black",
         //axisYType: "secondary",
         showInLegend: true,
         legendText: "Остатки на <%=till%>: <%=amount2%> т",
@@ -205,7 +213,8 @@ var items5 = new Array();
 
       {        
         type: "bar",  
-	indexLabelFontSize: 16,
+		indexLabelFontSize: 16,
+		indexLabelFontColor: "black",
         //axisYType: "secondary",
         showInLegend: true,
 		color: "#64A333",
@@ -215,10 +224,20 @@ var items5 = new Array();
       {        
         type: "bar",  
 	indexLabelFontSize: 16,
+		indexLabelFontColor: "black",
         showInLegend: true,
 		color: "#add8e6",
-        legendText: "Цена: <%=avgprice%> грн",
-        dataPoints: items4      
+        legendText: "Цена без НДС: <%=avgprice%> грн",
+        dataPoints: items4      },
+
+      {        
+        type: "bar",  
+	indexLabelFontSize: 16,
+		indexLabelFontColor: "black",
+        showInLegend: true,
+		color: "#7998a1",
+        legendText: "Цена c НДС: <%=avgpriceNDS%> грн",
+        dataPoints: items5      
        }
 
       ],
