@@ -88,7 +88,7 @@ var items5 = new Array();
       inp=1*rs('inp').value;
       sks=Math.round(amountplus!=0?1*rs('sks').value/amountplus:0);
       avgprice=1*rs('avgprice').value;
-	  avgpriceNDS=1.2*rs('avgprice').value;
+	  avgpriceNDS=1*rs('avgpriceNDS').value;
       snk42=1*rs('snk42').value;
       skk42=1*rs('skk42').value;
       price42=1*rs('price42').value;
@@ -132,7 +132,7 @@ var items5 = new Array();
     {
       var d = rs('amount2').value-rs('amount1').value;
       var ss = rs('avgprice').value!=0?Math.round(1.0*rs('avgprice').value):0;
-	  var priceNDS = Math.round(ss * 1.2);
+	  var priceNDS = rs('avgpriceNDS').value!=0?Math.round(1.0*rs('avgpriceNDS').value):0;
       var ename = rs('elevatorname').value;
       %>items1[<%=i%>]=new ai(<%=i%>,<%=rs('amount1').value%>,'<%=ename%>');
 <%
@@ -147,16 +147,12 @@ var items5 = new Array();
       i++;
       rs.MoveNext();
     };
-    d=skk42-snk42;
-    %>items1[<%=i%>]=new ai(<%=i%>,<%=snk42%>,'В пути c элеватора на контракт');<%
-    %>items2[<%=i%>]=new ai(<%=i%>,<%=skk42%>,'В пути c элеватора на контракт');<%
-    %>items4[<%=i%>]=new ai(<%=i%>,<%=price42%>,'В пути c элеватора на контракт');<%
   } catch(e) {
     Response.Write(e.message+'; Ошибка выполнения запроса: '+sql);
   }
 %>
 </script>
-<div id="chartContainer" style=" width: 100%; font-size:15">
+<div id="chartContainer" style="width: 100%; font-size:15">
 </div>                                                                                                                                                
 </body>
 <script type="text/javascript">
@@ -181,6 +177,7 @@ var items5 = new Array();
         labelFontSize: 14
       },
       axisX :{
+	  	interval: 1,
         labelFontSize: 14,
       },
       legend: {
