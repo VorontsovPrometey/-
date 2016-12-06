@@ -83,6 +83,7 @@ WriteStyle();
 
 #prices {width: 100%}
 #transit {width: 45%; float: left;}
+#recast {width: 45%; float: left;}
 #valcon {width: 100%; float: left;}
 #manager {width: 45%; float:left;}
 #car {width: 45%; float: right;}
@@ -270,6 +271,42 @@ function getv(e,p,c)
 </table>
 </div>
 
+<div id="recast">
+<h2>Переработка</h2>
+<table>
+<table name="trecast" id="trecast" class="grid" width="100%">
+<colgroup>
+<col class="string" width="25%"/>
+<col class="string" width="25%"/>
+<col class="string" width="20%"/>
+<col class="digit" width="10%"/>
+<col class="digit" width="10%"/>
+<col class="digit" width="10%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Завод</th>
+<th>Предприятие</th>
+<th>Культура</th>
+<th>Цена 1</th>
+<th>Цена 2</th>
+<th>Количество</th>
+</tr>
+</thead>
+<tbody>
+<%
+    rs=rs.NextRecordset;
+    while (!rs.eof) 
+    {
+%><tr><td><%=rs("portname").value%></td><td><%=rs("tradername").value%></td><td><%=rs("culturename").value%></td><td class="digit"><%=rs("price1").value%></td><td class="digit"><%=rs("price2").value%></td>
+<td class="digit"><%=rs("amount").value%></td><%
+%></tr><%
+      rs.MoveNext();
+    };
+%>
+</tbody>
+</table>
+</div>
 
 </div> <!--end container-->
 <%
