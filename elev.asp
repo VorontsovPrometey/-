@@ -109,17 +109,6 @@ var items5 = new Array();
     };
 %>
 </select><br>
-тип расчетов&nbsp;<select class="select" name="keeperType"> <br>
-<%
-    rs=rs.NextRecordset;
-    while (!rs.eof) 
-    {
-%><option value="<%=rs(0).value%>" <% if (rs(0).value==keeperType){%>selected<%}%> ><%=rs(1).value%></option>
-<%
-      rs.MoveNext();
-    };
-%>
-</select>
 &nbsp;<input name="go" type="submit" value="пересчитать" class="button1" />
 </fieldset>
 </form>
