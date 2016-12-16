@@ -196,6 +196,8 @@ if (s!='') {
   if ((Session.Contents("Isboss")==true)||(Session.Contents("Islogist")==true)||(Session.Contents("Ismanager")==true)) {
     result+='<li><a href="elev.asp" target="_blank">Остатки на элеваторах</a>';
     result+='<li><a href="elevin.asp" target="_blank">Поступления на элеваторы (нал/безнал)</a>';
+	result+='<li><a href="elev41.asp" target="_blank">Остатки чужого товара на элеваторах</a>';
+	result+='<li><a href="elevServiceProfit.asp" target="_blank">Прибыль от услуг элеваторов</a>';
   }
   if ((Session.Contents("Islogist")==true)) {
     result+='<li><a href="repContractQuota.asp" target="_blank">Квоты</a>';

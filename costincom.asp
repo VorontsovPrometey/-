@@ -181,7 +181,7 @@ function processDivis(kind, divis)
 	<tr>
 	<td><%=c.name %></td>
 <% if (qg>0) { %>
-	<td class="digit">-</td>
+	<td class="digit"></td>
 <% } %>
 	<td class="digit"><a href="javascript:inc('<%=c.incom%>','<%=c.divis%>')"><%=c.summa%></a></td>
 	</tr>

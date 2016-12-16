@@ -145,7 +145,7 @@ td+td+td+td {text-align:right;}
 <th>Культура</th> 
 <th>Начало</th> 
 <th>Окончание</th>
-<th>Трейдер/Поставщик</th> 
+<th>Трейдер(терминал)</th> 
 <th>Объем по контракту, т</th> 
 <th>Зарезер- вировано, т</th> 
 <th>Остаток, т</th> 
@@ -177,10 +177,13 @@ var n = this,
        var levl=rs("levl").value;
        var name=rs("name").value;
 	   var goodsname= rs("goodsname").value;
-       var since=rs("since").value;
-       var till=rs("till").value;
+	   var datearray = rs("since").value == null ? "" : rs("since").value.split("-");
+       var since= datearray=="" ? "" : datearray[2] + '.' + datearray[1] + '.' + datearray[0];
+	   var datearray = rs("till").value == null ? "" : rs("till").value.split("-");
+       var till = datearray=="" ? "" : datearray[2] + '.' + datearray[1] + '.' + datearray[0];
        var trader=rs("contragentname").value;
-       var amount=rs("amount").value;
+       var traderport= rs("placename").value != null ? trader + " (" + rs("placename").value + ")" : trader;
+	   var amount=rs("amount").value;
        if (amount!=null) amount= (1.0*amount).formatMoney(3, '.', ',');
        var valprice=rs("valprice").value;
        if (valprice!=null) valprice= (1.0*valprice).formatMoney(2, '.', ',');
@@ -210,7 +213,7 @@ var n = this,
 <td><%=goodsname%></td>
 <td><%=since%></td>
 <td><%=till%></td>
-<td><%=trader%></td>
+<td><%=traderport%></td>
 <td><%=amount%></td>
 <td><%=reserved%></td>
 <td><b><%=rest%></b></td>

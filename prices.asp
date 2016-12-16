@@ -151,10 +151,10 @@ function getv(e,p,c)
 
   for(var e=0;e<qelev;e++)
   {
+  	var priceInd = 0;
     for (var p=1;p<=3;p++)
     {
       var skip = true;
-	  var priceInd = 0;
       for(var c=0;c<qcol;c++)
       {
         var v=getv(elevator[e].key,p,culture[c].key);

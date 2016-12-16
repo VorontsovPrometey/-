@@ -71,7 +71,7 @@ var items5 = new Array();
 
 // выполняем и запоминаем
   var conn=null;
-  var sql="exec repElevatorsRestsTest "+psince+","+ptill+","+pgoods+","+ptype;
+  var sql="exec repElevatorsRests "+psince+","+ptill+","+pgoods+","+ptype;
   try {
     conn=getConnection(false);
     conn.CommandTimeout=160;
@@ -109,6 +109,17 @@ var items5 = new Array();
     };
 %>
 </select><br>
+тип расчетов&nbsp;<select class="select" name="keeperType"> <br>
+<%
+    rs=rs.NextRecordset;
+    while (!rs.eof) 
+    {
+%><option value="<%=rs(0).value%>" <% if (rs(0).value==keeperType){%>selected<%}%> ><%=rs(1).value%></option>
+<%
+      rs.MoveNext();
+    };
+%>
+</select>
 &nbsp;<input name="go" type="submit" value="пересчитать" class="button1" />
 </fieldset>
 </form>

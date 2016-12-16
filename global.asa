@@ -10,10 +10,10 @@ function Session_OnStart(){
   //Session.Contents('ConStr')="Provider=SQLOLEDB.1;Data Source=liveline.ddns.mksat.net;General Timeout=600;Initial Catalog="
   //Session.Contents('ConStr')="Provider=SQLOLEDB.1;Data Source=WIN2K12-DB;General Timeout=600;Initial Catalog="
   //Session.Contents('ConStr')="Provider=SQLOLEDB.1;Data Source=127.0.0.1;General Timeout=600;Initial Catalog="
-  //Session.Contents('ConStr')="Provider=SQLOLEDB.1;Data Source=192.168.0.1;General Timeout=600;Initial Catalog="
   Session.Contents('ConStr')="Provider=SQLOLEDB.1;Data Source=192.168.0.1;General Timeout=600;Initial Catalog="
+  //Session.Contents('ConStr')="Provider=SQLOLEDB.1;Data Source=192.168.0.1;General Timeout=600;Initial Catalog="
   Session.Contents('UserId')=''
-  //Session.Contents('Database')='fa'
+  Session.Contents('Database')='fa'
   Session.Contents('Password')=''
   Session.Contents('RecCount')=100
   Session.Contents('UseImg')=1

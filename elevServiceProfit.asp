@@ -19,6 +19,7 @@ WriteStyle();
 var s=''+Request.ServerVariables('Request_Method');
 var goods=''
 var till=new Date();
+var acc='';
 if ((s.indexOf('POST')>=0)&&(''+Request.Form("till")!='undefined')) {
   till=parseDate(""+Request.Form("till"));
 } else {
@@ -33,19 +34,21 @@ if ((s.indexOf('POST')>=0)&&(''+Request.Form("since")!='undefined')) {
 if ((s.indexOf('POST')>=0)&&(''+Request.Form("goods")!='undefined')) {
   goods=''+Request.Form("goods");
 }
+if ((s.indexOf('POST')>=0)&&(''+Request.Form("acc")!='undefined')) {
+  acc=''+Request.Form("acc");
+}
 var psince='null'
 var ptill='null'
 var pgoods='null'
 if (goods!='') {pgoods="'"+goods+"'"};
 if (since!='') {psince="'"+dateToSQL(since)+"'"};
 if (till!='') {ptill="'"+dateToSQL(till)+"'"};
+if (acc!='') {ptype="'"+acc+"'"};
+
 %>
 <script type="text/javascript">
 function ai(x,y,label){this.x=x; this.y=y; this.label=label; this.indexLabel = ''+y;}
 var items1 = new Array();
-var items2 = new Array();
-var items3 = new Array();
-var items4 = new Array();
 
 </script>
 </head>
@@ -53,17 +56,10 @@ var items4 = new Array();
 <% 
   var goodsname='';
   var goods='';
-  var amount1='';
-  var amount2='';
-  var amountplus='';
-  var sks='';
-  var snk42='';
-  var skk42='';
-  var price42='';
-  var avgprice='';
-// выполняем и запоминаем
+  var summa='';
+// выполн¤ем и запоминаем
   var conn=null;
-  var sql="exec repElevatorsRestsNotOurs "+psince+","+ptill+","+pgoods+"";
+  var sql="exec repElevatorsServiceProfit "+psince+","+ptill+","+pgoods+"";
   try {
     conn=getConnection(false);
     conn.CommandTimeout=160;
@@ -74,17 +70,14 @@ var items4 = new Array();
       goods=rs('goods').value;
       since=rs('since').value;
       till=rs('till').value;
-      amount1=1*rs('amount1').value;
-      amount2=1*rs('amount2').value;
-	  sks=rs('sks').value;
-      inp=1*rs('inp').value;
+      summa=1*rs('summa').value;
     };
 %>
-<form name="criteria" action="elev41.asp" method="POST">
+<form name="criteria" action="elevServiceProfit.asp" method="POST">
 <fieldset>
 с&nbsp;<input class="date" type=Text name="since" size=5 maxlength=10 value="<%=dateToStr(since) %>"> 
-по&nbsp;<input class="date" type=Text name="till" size=5 maxlength=10 value="<%=dateToStr(till) %>">
-культура&nbsp;<select name="goods">
+по&nbsp;<input class="date" type=Text name="till" size=5 maxlength=10 value="<%=dateToStr(till) %>"> <br>
+культура&nbsp;<select name="goods">  <br>
 <%
     rs=rs.NextRecordset;
     while (!rs.eof) 
@@ -94,7 +87,19 @@ var items4 = new Array();
       rs.MoveNext();
     };
 %>
-<input name="go" type="submit" value="пересчитать" class="button1" />
+</select><br>
+хранители&nbsp;<select name="keeperType"> <br>
+<%
+    rs=rs.NextRecordset;
+    while (!rs.eof) 
+    {
+%><option value="<%=rs(0).value%>" <% if (rs(0).value==keeperType){%>selected<%}%> ><%=rs(1).value%></option>
+<%
+      rs.MoveNext();
+    };
+%>
+</select>
+&nbsp;<input name="go" type="submit" value="пересчитать" class="button1" />
 </fieldset>
 </form>
 </div>
@@ -104,23 +109,15 @@ var items4 = new Array();
     var i=0;
     while (!rs.eof) 
     {
-      var d = rs('amount2').value-rs('amount1').value;
       var ename = rs('elevatorname').value;
-      %>items1[<%=i%>]=new ai(<%=i%>,<%=rs('amount1').value%>,'<%=ename%>');
+      %>items1[<%=i%>]=new ai(<%=i%>,<%=Math.round(rs('summa').value)%>,'<%=ename%>');
 <%
-      %>items2[<%=i%>]=new ai(<%=i%>,<%=Math.round(rs('amount2').value)%>,'<%=ename%>');
-<%
-      %>items3[<%=i%>]=new ai(<%=i%>,<%=d%>,'<%=ename%>');
-<%
-      %>items4[<%=i%>]=new ai(<%=i%>,<%=rs('inp').value%>,'<%=ename%>');
-<%
-    
       i++;
       rs.MoveNext();
     };
 
   } catch(e) {
-    Response.Write(e.message+'; Ошибка выполнения запроса: '+sql);
+    Response.Write(e.message+'; ќшибка выполнени¤ запроса: '+sql);
   }
 %>
 </script>
@@ -131,20 +128,16 @@ var items4 = new Array();
     var chart = new CanvasJS.Chart("chartContainer",
     {
       backgroundColor: "#fbfbe5",
-	  height: items2.length * 40 + 140,
+	  height: items1.length * 40 + 140,
 	  zoomEnabled: true,
 	  fontColor: "black",
       title:{
         text: "<%=goodsname%>",
 	fontSize: 30
       },
-      axisY2: {
-        title:"Остатки на элеваторах,т ",
-	titleFontSize: 24,
-      },
       animationEnabled: true,
       axisY: {
-        title: "Остатки чужого товара на элеваторах,т ",
+        title: "Прибыль от услуг элеватора, грн ",
 	titleFontSize: 24,
         labelFontSize: 14
       },
@@ -163,8 +156,8 @@ var items4 = new Array();
         //axisYType: "secondary",
         showInLegend: true,
 		color: "#c24642",
-        legendText: "Остатки чужого товара на <%=till%>: <%=amount2%> т",
-        dataPoints: items2      
+        legendText: "Прибыль от услуг элеватора с <%=since%> по <%=till%>: <%=summa%> грн",
+        dataPoints: items1      
        }
       ],
       legend: {

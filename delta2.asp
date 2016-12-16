@@ -92,11 +92,12 @@ function g(goods,incom,divis) {
 function writecolgroup(){
 Response.Write('<colgroup>'
 +'<col class="string" width="40%"/>'
-+'<col class="digit" width="12%"/>'
-+'<col class="digit" width="12%"/>'
-+'<col class="digit" width="12%"/>'
-+'<col class="digit" width="12%"/>'
-+'<col class="digit" width="12%"/>'
++'<col class="digit" width="10%"/>'
++'<col class="digit" width="10%"/>'
++'<col class="digit" width="10%"/>'
++'<col class="digit" width="10%"/>'
++'<col class="digit" width="10%"/>'
++'<col class="digit" width="10%"/>'
 +'</colgroup>');
 }
 
@@ -150,6 +151,7 @@ Response.Write('<colgroup>'
 <th>Показатель</th>
 <th>Всего</th>
 <th>в т.ч. $</th>
+<th>в т.ч. eur</th>
 <th>в т.ч. грн</th>
 <!--<th>процент</th>-->
 <th>Изменилось с <%=since%></th>
@@ -176,7 +178,7 @@ Response.Write('<colgroup>'
          //levl=prevlevl;
       }
       if (down==true) {
-%><tr><td colspan="6"><details><summary align="left"><span>
+%><tr><td colspan="7"><details><summary align="left"><span>
 <table width="100%">
 <% writecolgroup(); %>
 <tbody>
@@ -186,6 +188,7 @@ Response.Write('<colgroup>'
 <tr><td><%=rs('name').value%><%=1.0*rs('prcnt').value==0?'':' ('+(1.0*rs('prcnt').value).formatMoney(0, '.', ',')+'%)'%></td>
 <td class="boldnumber"><b><%=(1.0*rs('total').value).formatMoney(0, '.', ',')%></b></td>
 <td class="number"><%=(1.0*rs('usd').value).formatMoney(0, '.', ',')%></td>
+<td class="number"><%=(1.0*rs('eur').value).formatMoney(0, '.', ',')%></td>
 <td class="number"><%=(1.0*rs('uah').value).formatMoney(0, '.', ',')%></td>
 <!--<td class="number"><%=levl==1?'':(1.0*rs('prcnt').value).formatMoney(0, '.', ',')%>-->
 <td class="number"><%=(1.0*rs('diff').value).formatMoney(0, '.', ',')%></td>
@@ -209,7 +212,7 @@ Response.Write('<colgroup>'
 <%       }
 
 %>
-<tr><td colspan="6"><h2>Результат деятельности за период с <%=since%> по <%=till%></h2></td>
+<tr><td colspan="7"><h2>Результат деятельности за период с <%=since%> по <%=till%></h2></td>
 <%
     rs=rs.NextRecordset;
     if (!rs.eof) 
@@ -219,12 +222,21 @@ Response.Write('<colgroup>'
 <tr><td>Дополнительная прибыль</td><td class="number"><%=(1.0*rs("a105").value).formatMoney(0, '.', ',')%></td>
 <tr><td>Дополнительные убытки</td><td class="number"><%=(1.0*rs("a106").value).formatMoney(0, '.', ',')%></td>
 <tr><td>Результат деятельности</td><td class="number"><%=(1.0*rs("result").value).formatMoney(0, '.', ',')%></td>
+
+<tr><td colspan="7"><h2>Прибыль за дату <%=rs("profitday").value%></h2></td>
+<tr><td> - от продажи товара</td><td class="number"><%=(1.0*rs("realizprofit").value).formatMoney(0, '.', ',')%></td>
+<tr><td> - от услуг элеваторов</td><td class="number"><%=(1.0*rs("elevatorsprofit").value).formatMoney(0, '.', ',')%></td>
+<tr><td> - от курсовой разницы</td><td class="number"><%=(1.0*rs("curratediffprofit").value).formatMoney(0, '.', ',')%></td>
+<tr><td> Итого : </td><td class="number"><%=(1.0*rs("dayprofitsum").value).formatMoney(0, '.', ',')%></td>
 <tr><td colspan="7"><h2>Справки</h2></td>
 <tr><td>Недопоставки по договорам</td><td class="number"><%=(1.0*rs("contracts").value).formatMoney(0, '.', ',')%></td>
 <tr><td>Расходы по смете</td><td class="number"><%=(1.0*rs("monthcost").value).formatMoney(0, '.', ',')%></td>
-<tr><td>Курсовая разница</td><td class="number"><%=(1.0*rs("rateresult").value).formatMoney(0, '.', ',')%></td>
+<tr><td>Курсовая разница USD</td><td class="number"><%=(1.0*rs("rateresult").value).formatMoney(0, '.', ',')%></td>
 <td class="number"><%=(1.0*rs("prevusd").value).formatMoney(0, '.', ',')%></td>
 <td class="number"><%=(1.0*rs("rate").value-rs("rateprev").value).formatMoney(0, '.', ',')%></td>
+<tr><td>Курсовая разница EUR</td><td class="number"><%=(1.0*rs("rateeurresult").value).formatMoney(0, '.', ',')%></td>
+<td class="number"><%=(1.0*rs("preveur").value).formatMoney(0, '.', ',')%></td>
+<td class="number"><%=(1.0*rs("rateeur").value-rs("ratepreveur").value).formatMoney(0, '.', ',')%></td>
 <%
     };
 %>

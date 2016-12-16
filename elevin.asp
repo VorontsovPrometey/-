@@ -41,7 +41,7 @@ if (since!='') {psince="'"+dateToSQL(since)+"'"};
 if (till!='') {ptill="'"+dateToSQL(till)+"'"};
 %>
 <script type="text/javascript">
-function ai(x,y,label){this.x=x; this.y=y; this.label=label; this.indexLabel = ''+y;}
+function ai(x,y,label){this.x=x; this.y=y; this.label=label; this.indexLabel = y!=0?''+y:'';}
 var items1 = new Array();
 var items2 = new Array();
 var items3 = new Array();
@@ -56,8 +56,8 @@ var items3 = new Array();
   var amounttotal='';
 // выполняем и запоминаем
   var conn=null;
+
   var sql="exec repElevatorsInput "+psince+","+ptill+","+pgoods;
-  var i=0;
   try {
     conn=getConnection(false);
     conn.CommandTimeout=160;
@@ -94,18 +94,18 @@ var items3 = new Array();
 <script type="text/javascript">
 <%
     rs=rs.NextRecordset;    
+    var i=0;
     while (!rs.eof) 
     {
       var beznal = rs('beznal').value;
       var total = rs('amount').value;
       var nal = total-beznal;
       var ename = rs('elevatorname').value;
-      %>items1[<%=i%>]=new ai(<%=i%>,<%=beznal%>,'<%=ename%>');
+
+      %>items1[<%=i%>]=new ai(<%=i%>, <%=Math.round(beznal)%>,'<%=ename%> (<%=Math.round(beznal/total * 1000) / 10.0%> %/<%=Math.round(nal/total * 1000) / 10.0%> %)');
+<%    %>items2[<%=i%>]=new ai(<%=i%>, <%=Math.round(nal)%>,'<%=ename%> (<%=Math.round(beznal/total * 1000) / 10.0%> %/<%=Math.round(nal/total * 1000) / 10.0%> %)');
 <%
-      %>items2[<%=i%>]=new ai(<%=i%>,<%=nal%>,'<%=ename%>');
-<%
-      %>items3[<%=i%>]=new ai(<%=i%>,<%=total%>,'<%=ename%>');
-<%
+
       i++;
       rs.MoveNext();
     };
@@ -114,28 +114,31 @@ var items3 = new Array();
   }
 %>
 </script>
-<div id="chartContainer" style="height: <%=100+i*40%>px; width: 100%; font-size:12">
+<div id="chartContainer" style="width: 100%; font-size:12">
 </div>                                                                                                                                                
 </body>
 <script type="text/javascript">
     var chart = new CanvasJS.Chart("chartContainer",
     {
       backgroundColor: "#fbfbe5",
+	  height: items2.length * 40 + 140,
+	  zoomEnabled: true,
       title:{
         text: "<%=goodsname%>",
-	fontSize: 30
+		fontSize: 30
       },
       axisY2: {
         title:"Поступило на элеваторы,т ",
-	titleFontSize: 24,
+		titleFontSize: 24,
       },
       animationEnabled: true,
       axisY: {
         title: "Поступило на элеваторы <%=amounttotal%>т",
-	titleFontSize: 24,
-        labelFontSize: 14
+		titleFontSize: 24,
+        labelFontSize: 18
       },
       axisX :{
+	  	interval: 1,
         labelFontSize: 14,
       },
       legend: {
@@ -144,21 +147,22 @@ var items3 = new Array();
       data: [
       {        
         type: "stackedBar",  
-	indexLabelFontSize: 16,
-	indexLabelFontColor: "white",
-        showInLegend: true, 
-        legendText: "Безнал <%=amount1%>т",
-        dataPoints: items1      
-      },
+		indexLabelFontSize: 18,
+		indexLabelFontColor: "black",
+        showInLegend: true,
+        legendText: "Безнал <%=amount1%>т (<%=Math.round(amount1/amounttotal * 1000) / 10.0%>%)",
+        dataPoints: items1 
+      }
+	  ,
       {        
         type: "stackedBar",  
-	indexLabelFontSize: 16,
+		indexLabelFontSize: 18,
         //axisYType: "secondary",
-	indexLabelFontColor: "white",
+		indexLabelFontColor: "black",
         showInLegend: true,
-        legendText: "Наличные <%=amount2%>т",
+        legendText: "Наличные <%=amount2%>т (<%=Math.round(amount2/amounttotal * 1000) / 10.0%>%)",
         dataPoints: items2      
-      },
+      }
       ],
       legend: {
         cursor:"pointer",
@@ -174,7 +178,7 @@ var items3 = new Array();
         }
       }
     });
-
+	
 chart.render();
 </script>
 

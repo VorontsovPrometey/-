@@ -43,9 +43,6 @@ if (till!='') {ptill="'"+dateToSQL(till)+"'"};
 <script type="text/javascript">
 function ai(x,y,label){this.x=x; this.y=y; this.label=label; this.indexLabel = ''+y;}
 var items1 = new Array();
-var items2 = new Array();
-var items3 = new Array();
-var items4 = new Array();
 
 </script>
 </head>
@@ -53,17 +50,10 @@ var items4 = new Array();
 <% 
   var goodsname='';
   var goods='';
-  var amount1='';
-  var amount2='';
-  var amountplus='';
-  var sks='';
-  var snk42='';
-  var skk42='';
-  var price42='';
-  var avgprice='';
+  var summa='';
 // выполн€ем и запоминаем
   var conn=null;
-  var sql="exec repElevatorsRestsNotOurs "+psince+","+ptill+","+pgoods+"";
+  var sql="exec repElevatorsServiceProfit "+psince+","+ptill+","+pgoods+"";
   try {
     conn=getConnection(false);
     conn.CommandTimeout=160;
@@ -74,13 +64,10 @@ var items4 = new Array();
       goods=rs('goods').value;
       since=rs('since').value;
       till=rs('till').value;
-      amount1=1*rs('amount1').value;
-      amount2=1*rs('amount2').value;
-	  sks=rs('sks').value;
-      inp=1*rs('inp').value;
+      summa=1*rs('summa').value;
     };
 %>
-<form name="criteria" action="elev41.asp" method="POST">
+<form name="criteria" action="elevServiceProfit.asp" method="POST">
 <fieldset>
 с&nbsp;<input class="date" type=Text name="since" size=5 maxlength=10 value="<%=dateToStr(since) %>"> 
 по&nbsp;<input class="date" type=Text name="till" size=5 maxlength=10 value="<%=dateToStr(till) %>">
@@ -104,17 +91,9 @@ var items4 = new Array();
     var i=0;
     while (!rs.eof) 
     {
-      var d = rs('amount2').value-rs('amount1').value;
       var ename = rs('elevatorname').value;
-      %>items1[<%=i%>]=new ai(<%=i%>,<%=rs('amount1').value%>,'<%=ename%>');
+      %>items1[<%=i%>]=new ai(<%=i%>,<%=Math.round(rs('summa').value)%>,'<%=ename%>');
 <%
-      %>items2[<%=i%>]=new ai(<%=i%>,<%=Math.round(rs('amount2').value)%>,'<%=ename%>');
-<%
-      %>items3[<%=i%>]=new ai(<%=i%>,<%=d%>,'<%=ename%>');
-<%
-      %>items4[<%=i%>]=new ai(<%=i%>,<%=rs('inp').value%>,'<%=ename%>');
-<%
-    
       i++;
       rs.MoveNext();
     };
@@ -131,7 +110,7 @@ var items4 = new Array();
     var chart = new CanvasJS.Chart("chartContainer",
     {
       backgroundColor: "#fbfbe5",
-	  height: items2.length * 40 + 140,
+	  height: items1.length * 40 + 140,
 	  zoomEnabled: true,
 	  fontColor: "black",
       title:{
@@ -144,7 +123,7 @@ var items4 = new Array();
       },
       animationEnabled: true,
       axisY: {
-        title: "ќстатки чужого товара на элеваторах,т ",
+        title: "Прибыль от услуг элеватора, грн ",
 	titleFontSize: 24,
         labelFontSize: 14
       },
@@ -163,8 +142,8 @@ var items4 = new Array();
         //axisYType: "secondary",
         showInLegend: true,
 		color: "#c24642",
-        legendText: "ќстатки чужого товара на <%=till%>: <%=amount2%> т",
-        dataPoints: items2      
+        legendText: "орибыль от услуг элеватора с <%=since%> по <%=till%>: <%=summa%> грн",
+        dataPoints: items1      
        }
       ],
       legend: {
