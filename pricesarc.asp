@@ -224,9 +224,9 @@ function getv(e,p,c)
 <th>Порт</th>
 <th>Трейдер</th>
 <th>Культура</th>
+<th>Сроки</th>
 <th>Цена 1</th>
 <th>Цена 2</th>
-<th>Сроки</th>
 <th>Осталось тонн</th>
 <th>Валютная цена</th>
 </tr>
@@ -240,9 +240,9 @@ function getv(e,p,c)
 	<td><%=rs("portname").value%></td>
 	<td><%=rs("tradername").value%></td>
 	<td><%=rs("culturename").value%></td>
+	<td><%=dateToStr(rs("since").value)%> - <%=dateToStr(rs("till").value)%></td>
 	<td class="digit"><%=rs("price1").value%></td>
 	<td class="digit"><%=rs("price2").value%></td>
-	<td><%=dateToStr(rs("since").value)%> - <%=dateToStr(rs("till").value)%></td>
 	<td class="digit"><%=rs("kol").value%></td>
 	<td class="digit"><%=rs("priceval").value%></td><%
 %></tr><%
