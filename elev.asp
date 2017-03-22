@@ -90,7 +90,7 @@ var n = this,
 
 // выполняем и запоминаем
   var conn=null;
-  var sql="exec repElevatorsRestsTest "+psince+","+ptill+","+pgoods+","+pkeeper+","+ptype;
+  var sql="exec repElevatorsRests "+psince+","+ptill+","+pgoods+","+pkeeper+","+ptype;
   try {
     conn=getConnection(false);
     conn.CommandTimeout=160;
