@@ -109,6 +109,9 @@ function SwapGoods(b) {
 .lev3 {
 	background:#fbfbe5;
 }
+.zeroquote {
+	background:#fd9c9c;
+}
 input[type="checkbox"]{
 	display:none;
 }
@@ -210,16 +213,16 @@ var n = this,
 <%
        }
 %>
-<td><%=goodsname%></td>
-<td><%=since%></td>
-<td><%=till%></td>
-<td><%=traderport%></td>
-<td><%=amount%></td>
-<td><%=reserved%></td>
-<td><b><%=rest%></b></td>
-<td><%=price%></td>
-<td><%=valprice%>&nbsp;<%=curname%></td>
-<td><%=cost%></td>
+<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=goodsname%></td>
+<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=since%></td>
+<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=till%></td>
+<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=traderport%></td>
+<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=amount%></td>
+<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=reserved%></td>
+<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><b><%=rest%></b></td>
+<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=price%></td>
+<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=valprice%>&nbsp;<%=curname%></td>
+<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=cost%></td>
 </tr>
 <%
       rs.MoveNext();

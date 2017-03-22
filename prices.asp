@@ -81,6 +81,10 @@ WriteStyle();
 	color : #ff0000;
 	}
 
+.borderbottom1 {
+  background-color:#ffc3c3;
+}	
+	
 #prices {width: 100%}
 #transit {width: 45%; float: left;}
 #recast {width: 45%; float: left;}
@@ -210,7 +214,7 @@ function getv(e,p,c)
     while (!rs.eof) 
     {
 %><tr>
-		<td><%=rs("portname").value%></td>
+		<td class="border_bottom"><%=rs("portname").value%></td>
 		<td><%=rs("tradername").value%></td>
 		<td><%=rs("culturename").value%></td>
 		<td class="digit"><%=rs("price1").value%></td>
@@ -226,7 +230,7 @@ function getv(e,p,c)
 <div id="valcon">
 <h2>Валютные контракты</h2>
 <table>
-<table name="tvalcon" id="tvalcon" class="grid" width="100%">
+<table name="tvalcon" id="tvalcon"  border="1" bordercolor="#000000" cellspacing="0" cellpadding="1" width="100%">
 <colgroup>
 <col class="string" width="10%"/>
 <col class="string" width="15%"/>
@@ -254,7 +258,7 @@ function getv(e,p,c)
     rs=rs.NextRecordset;
     while (!rs.eof) 
     {
-%><tr>
+%><tr class="<%=rs("kol").value==0 || rs("kol").value==null?'borderbottom1':''%>">
 		<td><%=rs("portname").value%></td>
 		<td><%=rs("tradername").value%></td>
 		<td><%=rs("culturename").value%></td>
