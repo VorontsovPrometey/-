@@ -114,7 +114,7 @@ td+td+td+td {text-align:right;}
 
 <% WriteStyle()
 %>
-<title>Средние цены контрактов</title>
+<title>Средние цены по вылютным контрактам</title>
 
 </head>
 
@@ -123,7 +123,7 @@ td+td+td+td {text-align:right;}
 	<div id="container">
 		<div id="inner">
 
-<h1>Средние цены контрактов</h1>
+<h1>Средние цены по вылютным контрактам</h1>
 <button onclick="SwapAll(false);">Свернуть все</button></a>
 <button onclick="SwapAll(true);">Развернуть все</button></a>
 <br><br>
@@ -133,11 +133,12 @@ td+td+td+td {text-align:right;}
 <th>Культура</th> 
 <th>Начало</th> 
 <th>Окончание</th>
-<th>Трейдер</th> 
+<th>Трейдер(терминал)</th> 
 <th>Объем по контракту</th> 
+<th>Остаток квоты</th> 
 <th>Фактически завезено</th> 
-<th>Учетная стоимость завезенного товара</th> 
 <th>Цена продажи</th> 
+<th>Средняя цена остатка квот</th>
 </tr>
 </thead>
 <%
@@ -153,7 +154,7 @@ var n = this,
  };
 
   var conn=null;
-  var sql="exec repContractQuote";
+  var sql="exec repContractQuote null, null, 0, 0, 840";
   try {
     conn=getConnection(false);
     conn.CommandTimeout=160;
@@ -163,16 +164,22 @@ var n = this,
        var levl=rs("levl").value;
        if (levl>=1) {rs.MoveNext(); continue;};
        var name=rs("name").value;
+	   if (name!=null && name=="Пшеница") name="Пшеница (смешанные)";
+       var rest=rs("rest").value;
        var since=rs("since").value;
        var till=rs("till").value;
        var trader=rs("contragentname").value;
+       var traderport= rs("placename").value != null ? trader + " (" + rs("placename").value + ")" : trader;
        var amount=rs("amount").value;
        var fact=rs("fact").value;
        if (fact!=null) fact= (1.0*fact).formatMoney(0, '.', ',');
-       var p62=rs("p62").value;
-       if (p62!=null) p62= (1.0*p62).formatMoney(0, '.', ',');
-       var p40=rs("p40").value;
-       if (p40!=null) p40= (1.0*p40).formatMoney(0, '.', ',');
+       var rest=rs("rest").value;
+       if (rest!=null) rest= (1.0*rest).formatMoney(0, '.', ',');	   
+       var valprice=rs("valprice").value;
+       if (valprice!=null) valprice= (1.0*valprice).formatMoney(2, '.', ',');	   
+	   var avgprice=rs("avgprice").value;
+       if (avgprice!=null) avgprice= (1.0*avgprice).formatMoney(2, '.', ',');	
+	   
        if (levl==-1) {
 %>
 <tr class="lev<%=levl+2%>">
@@ -187,11 +194,12 @@ var n = this,
 %>
 <td><%=since%></td>
 <td><%=till%></td>
-<td><%=trader%></td>
+<td><%=traderport%></td>
 <td><%=amount%></td>
+<td><%=rest%></td>
 <td><%=fact%></td>
-<td><%=p62%></td>
-<td><%=p40%></td>
+<td><%=valprice%></td>
+<td><%=avgprice%></td>
 </tr>
 <%
       rs.MoveNext();
