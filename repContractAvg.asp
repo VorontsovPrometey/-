@@ -123,7 +123,7 @@ td+td+td+td {text-align:right;}
 	<div id="container">
 		<div id="inner">
 
-<h1>Средние цены по вылютным контрактам</h1>
+<h1>Средние цены по валютным контрактам</h1>
 <button onclick="SwapAll(false);">Свернуть все</button></a>
 <button onclick="SwapAll(true);">Развернуть все</button></a>
 <br><br>
@@ -135,8 +135,8 @@ td+td+td+td {text-align:right;}
 <th>Окончание</th>
 <th>Трейдер(терминал)</th> 
 <th>Объем по контракту</th> 
-<th>Остаток квоты</th> 
 <th>Фактически завезено</th> 
+<th>Остаток квоты</th>
 <th>Цена продажи</th> 
 <th>Средняя цена остатка квот</th>
 </tr>
@@ -196,8 +196,8 @@ var n = this,
 <td><%=till%></td>
 <td><%=traderport%></td>
 <td><%=amount%></td>
-<td><%=rest%></td>
 <td><%=fact%></td>
+<td><%=rest%></td>
 <td><%=valprice%></td>
 <td><%=avgprice%></td>
 </tr>
