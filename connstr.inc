@@ -186,7 +186,7 @@ if (s!='') {
   { result+='<li><a href="delta2.asp" target="_blank">Дельта</a>';
     result+='<li><a href="costincom.asp" target="_blank">Доходы и расходы</a>';
 //    result+='<li><a href="auto3.asp"  target="_blank">Содержание авто</a>';
-    result+='<li><a href="repContractAvg.asp" target="_blank">Средние цены</a>';
+    result+='<li><a href="repContractAvg.asp" target="_blank">Средние цены по валютным контрактам</a>';
     result+='<li><a href="repContractQuota.asp" target="_blank">Квоты</a>';
     result+='<li><a href="cassaget.asp" target="_blank">Касса</a>';
   };
@@ -196,8 +196,6 @@ if (s!='') {
   if ((Session.Contents("Isboss")==true)||(Session.Contents("Islogist")==true)||(Session.Contents("Ismanager")==true)) {
     result+='<li><a href="elev.asp" target="_blank">Остатки на элеваторах</a>';
     result+='<li><a href="elevin.asp" target="_blank">Поступления на элеваторы (нал/безнал)</a>';
-	result+='<li><a href="elev41.asp" target="_blank">Остатки чужого товара на элеваторах</a>';
-	result+='<li><a href="elevServiceProfit.asp" target="_blank">Прибыль от услуг элеваторов</a>';
   }
   if ((Session.Contents("Islogist")==true)) {
     result+='<li><a href="repContractQuota.asp" target="_blank">Квоты</a>';
