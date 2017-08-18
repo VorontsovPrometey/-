@@ -100,7 +100,7 @@ function SwapGoods(b) {
 	display:table-row;
 }
 .treetable .lev1 {
-	background:#EEE8CD;
+	background:#79f965;
 	display:table-row;
 }
 .lev2 {
@@ -111,6 +111,9 @@ function SwapGoods(b) {
 }
 .zeroquote {
 	background:#fd9c9c;
+}
+.autoquote {
+	background:#ad9c9c;
 }
 input[type="checkbox"]{
 	display:none;
@@ -151,10 +154,11 @@ td+td+td+td {text-align:right;}
 <th>Трейдер(терминал)</th> 
 <th>Объем по контракту, т</th> 
 <th>Зарезер- вировано, т</th> 
-<th>Остаток, т</th> 
+<th>Остаток квоты, т</th> 
+<th>Фактически поставлено, т</th> 
+<th>Осталось поставить, т</th> 
 <th>Цена продажи, грн</th> 
 <th>Цена продажи, валюта</th> 
-<th>Цена учетная, грн</th> 
 </tr>
 </thead>
 <%
@@ -187,6 +191,7 @@ var n = this,
        var trader=rs("contragentname").value;
        var traderport= rs("placename").value != null ? trader + " (" + rs("placename").value + ")" : trader;
 	   var amount=rs("amount").value;
+	   var supplyRest=amount;
        if (amount!=null) amount= (1.0*amount).formatMoney(3, '.', ',');
        var valprice=rs("valprice").value;
        if (valprice!=null) valprice= (1.0*valprice).formatMoney(2, '.', ',');
@@ -194,8 +199,14 @@ var n = this,
 
        var reserved=rs("reserved").value;
        if (reserved!=null) reserved= (1.0*reserved).formatMoney(3, '.', ',');
+	   var autoquote=rs("autoquote").value;
+       if (autoquote!=null) autoquote= (1.0*autoquote).formatMoney(3, '.', ',');
        var rest=rs("rest").value;
        if (rest!=null) rest= (1.0*rest).formatMoney(3, '.', ',');
+       var fact=rs("fact").value;
+	   supplyRest = supplyRest - fact;
+       if (fact!=null) fact= (1.0*fact).formatMoney(3, '.', ',');
+	   if (supplyRest!=null) supplyRest= (1.0*supplyRest).formatMoney(3, '.', ',');
        var price=rs("price").value;
        if (price!=null) price= (1.0*price).formatMoney(2, '.', ',');
        var cost=rs("cost").value;
@@ -204,7 +215,7 @@ var n = this,
        if (levl<=0) {
 %>
 <tr class="lev<%=levl+2%>">
-<td  <% if (1==1) { %>style="background:<%=rs("color").value%>" <% }; %>><label><input type="checkbox"><a onclick="sh(this)"><%=levl==0?trader:name%></a></label></td>
+<td  <% if (1==1) { %>style="background:<%=rs("color").value%>" <% }; %>><label><input type="checkbox"><a onclick="sh(this)"><%=name%></a></label></td>
 <%
        } else { 
 %>
@@ -218,11 +229,32 @@ var n = this,
 <td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=till%></td>
 <td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=traderport%></td>
 <td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=amount%></td>
-<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=reserved%></td>
+<%
+	if(levl==1 && autoquote != null){
+%>
+<td class="autoquote"><%=reserved != null ? reserved : autoquote%></td>
+<%
+	} else {
+%>
+<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=reserved != null ? reserved : autoquote%></td>
+<%
+	}
+%>
 <td class="<%=levl==0 && rest==0?'zeroquote':''%>"><b><%=rest%></b></td>
+<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=fact%></td>
+<%
+	if(levl==0 || levl == -1){
+%>
+<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><b><%=supplyRest%></b></td>
+<%
+	} else {
+%>
+<td class="<%=levl==0 && rest==0?'zeroquote':''%>"></td>
+<%
+	}
+%>
 <td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=price%></td>
 <td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=valprice%>&nbsp;<%=curname%></td>
-<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=cost%></td>
 </tr>
 <%
       rs.MoveNext();

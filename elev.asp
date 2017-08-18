@@ -148,6 +148,8 @@ var n = this,
     rs=rs.NextRecordset;    
     var i=0;
 	var j=25;
+	var pos = 0;
+	var neg = 0;
     while (!rs.eof) 
     {
       var d = rs('amount2').value-rs('amount1').value;
@@ -167,6 +169,8 @@ var n = this,
 	  %>items5[<%=i%>]=new ai(<%=j%>,<%=priceNDS%>,'<%=ename%>');
 <%	  
       i++;
+	  pos = pos + (rs('amount2').value > 0 ? rs('amount2').value : 0);
+	  neg = neg + (rs('amount2').value < 0 ? rs('amount2').value : 0);
 	  j+=50;
       rs.MoveNext();
     };
@@ -186,7 +190,7 @@ var n = this,
 	  height: (items2.length + 1) * 140,
 	  fontColor: "black",
       title:{
-        text: "<%=goodsname%>",
+        text: "<%=goodsname%> " + "(Общий остаток: <%=pos%>," + " Общий долг: <%=neg%>)",
 	fontSize: 30
       },
       axisY2: {
@@ -246,7 +250,7 @@ var n = this,
         //axisYType: "secondary",
         showInLegend: true,
 		color: "#64A333",
-        legendText: "Поступило за день: <%=inp%> т",
+        legendText: "Поступило за период с <%=since%> по <%=till%>: <%=inp%> т",
         dataPoints: items3      },
 
       {        
