@@ -4,7 +4,7 @@ trySession();
 Response.CacheControl = "no-cache"
 Response.AddHeader("Pragma", "no-cache") 
 Response.Expires = -1 
-Session.Timeout = 480
+Session.Timeout = 600
 %>
 <!--  #include file="connstr.inc" -->
 <!DOCTYPE HTML>
@@ -42,11 +42,13 @@ if (till!='') {ptill="'"+dateToSQL(till)+"'"};
 %>
 <script type="text/javascript">
 function ai(x,y,label){this.x=x; this.y=y; this.label=label; this.indexLabel = ''+y;}
+var items0 = new Array();
 var items1 = new Array();
 var items2 = new Array();
 var items3 = new Array();
 var items4 = new Array();
-
+var items5 = new Array();
+var items6 = new Array();
 </script>
 </head>
 <body>
@@ -55,13 +57,15 @@ var items4 = new Array();
   var goods='';
   var amount1='';
   var amount2='';
+  var deltaStart='';
+  var deltaEnd='';
   var amountplus='';
   var sks='';
   var snk42='';
   var skk42='';
   var price42='';
   var avgprice='';
-// выполняем и запоминаем
+// выполн¤ем и запоминаем
   var conn=null;
   var sql="exec repElevatorsRestsNotOurs "+psince+","+ptill+","+pgoods+"";
   try {
@@ -78,6 +82,9 @@ var items4 = new Array();
       amount2=1*rs('amount2').value;
 	  sks=rs('sks').value;
       inp=1*rs('inp').value;
+      deltaStart=1*rs('deltaStart').value;
+      deltaEnd=1*rs('deltaEnd').value;
+	  posrest=rs('posrest').value;
     };
 %>
 <form name="criteria" action="elev41.asp" method="POST">
@@ -94,33 +101,45 @@ var items4 = new Array();
       rs.MoveNext();
     };
 %>
+</select>
 <input name="go" type="submit" value="пересчитать" class="button1" />
 </fieldset>
 </form>
-</div>
 <script type="text/javascript">
 <%
     rs=rs.NextRecordset;    
     var i=0;
+	var j=25;
+	var pos = 0;
+	var neg = 0;
     while (!rs.eof) 
     {
       var d = rs('amount2').value-rs('amount1').value;
+	  var rest = Math.round(rs('amount2').value + rs('deltaEnd').value)
       var ename = rs('elevatorname').value;
-      %>items1[<%=i%>]=new ai(<%=i%>,<%=rs('amount1').value%>,'<%=ename%>');
+	  %>items0[<%=i%>]=new ai(<%=j+25%>,<%=0%>,'<%=ename%>');
 <%
-      %>items2[<%=i%>]=new ai(<%=i%>,<%=Math.round(rs('amount2').value)%>,'<%=ename%>');
+      %>items1[<%=i%>]=new ai(<%=j%>,<%=rs('amount1').value%>,'<%=ename%>');
 <%
-      %>items3[<%=i%>]=new ai(<%=i%>,<%=d%>,'<%=ename%>');
+      %>items2[<%=i%>]=new ai(<%=j%>,<%=rs('amount2').value%>,'<%=ename%>');
 <%
-      %>items4[<%=i%>]=new ai(<%=i%>,<%=rs('inp').value%>,'<%=ename%>');
+      %>items3[<%=i%>]=new ai(<%=j%>,<%=d%>,'<%=ename%>');
 <%
-    
+      %>items4[<%=i%>]=new ai(<%=j%>,<%=rs('inp').value%>,'<%=ename%>');
+<%
+      %>items5[<%=i%>]=new ai(<%=j%>,<%=Math.round(rs('deltaStart').value)%>,'<%=ename%>');
+<%
+      %>items6[<%=i%>]=new ai(<%=j%>,<%=Math.round(rs('posrest').value)%>,'<%=ename%>');
+<%
       i++;
+	  pos = pos + (rs('amount2').value > 0 ? rs('amount2').value : 0);
+	  neg = neg + (rs('amount2').value < 0 ? rs('amount2').value : 0);
+	  j+=50;
       rs.MoveNext();
     };
 
   } catch(e) {
-    Response.Write(e.message+'; Ошибка выполнения запроса: '+sql);
+    Response.Write(e.message+'; ќшибка выполнени¤ запроса: '+sql);
   }
 %>
 </script>
@@ -131,40 +150,51 @@ var items4 = new Array();
     var chart = new CanvasJS.Chart("chartContainer",
     {
       backgroundColor: "#fbfbe5",
-	  height: items2.length * 40 + 140,
-	  zoomEnabled: true,
+	  height: (items2.length + 1) * 100,
 	  fontColor: "black",
       title:{
-        text: "<%=goodsname%>",
-	fontSize: 30
-      },
-      axisY2: {
-        title:"Остатки на элеваторах,т ",
-	titleFontSize: 24,
+				text: "<%=goodsname%>" + "(Общий остаток: <%=pos%>," + " Общий долг: <%=neg%>)",
+				fontSize: 30
       },
       animationEnabled: true,
+      axisY2: {
+			labelFontSize: 14
+      },
       axisY: {
-        title: "Остатки чужого товара на элеваторах,т ",
-	titleFontSize: 24,
-        labelFontSize: 14
+			title: "Остатки чужого товара с учетом займа,т ",
+			titleFontSize: 24,
+			labelFontSize: 14
       },
       axisX :{
-	  	interval: 1,
-        labelFontSize: 14,
+			interval: 50,
+			interlacedColor: "rgba(253,229,85,.5)",
+			titleFontSize: 24,
+			labelFontSize: 14
       },
+		toolTip: {
+			shared: true
+	  },
       legend: {
-        verticalAlign: "bottom"
+        verticalAlign: "bottom",
+		horizontalAlign: "center",
+		fontColor: "black"
       },
       data: [
+	  {        
+        type: "bar",  
+		indexLabelFontSize: 18,
+		height: 1,
+		indexLabelFontColor: "rgba(0,0,0,.0)",
+		showInLegend: false, 
+		visible: true,
+        dataPoints: items0      },
       {        
         type: "bar",  
-		indexLabelFontSize: 16,
+		indexLabelFontSize: 18,
 		indexLabelFontColor: "black",
-        //axisYType: "secondary",
         showInLegend: true,
-		color: "#c24642",
-        legendText: "Остатки чужого товара на <%=till%>: <%=amount2%> т",
-        dataPoints: items2      
+        legendText: "Остатки на <%=till%>: <%=amount2%> т",
+        dataPoints: items2     
        }
       ],
       legend: {
