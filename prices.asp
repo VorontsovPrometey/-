@@ -249,6 +249,7 @@ function getv(e,p,c)
 <th>Сроки</th>
 <th>Цена 1</th>
 <th>Цена 2</th>
+<th>Цена 3</th>
 <th>Осталось тонн</th>
 <th>Валютная цена</th>
 </tr>
@@ -265,6 +266,7 @@ function getv(e,p,c)
 		<td><%=dateToStr(rs("since").value)%> - <p class="c1"><%=dateToStr(rs("till").value)%></p></td>
 		<td class="digit"><%=rs("price1").value%></td>
 		<td class="digit"><%=rs("price2").value%></td>
+		<td class="digit"><%=rs("price3").value%></td>
 		<td class="digit"><%=rs("kol").value%></td>
 		<td class="digit"><%=rs("priceval").value%></td><%
 %></tr><%
