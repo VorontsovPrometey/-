@@ -196,6 +196,7 @@ if (s!='') {
   if ((Session.Contents("Isboss")==true)||(Session.Contents("Islogist")==true)||(Session.Contents("Ismanager")==true)) {
     result+='<li><a href="elev.asp" target="_blank">Остатки на элеваторах</a>';
     result+='<li><a href="elevin.asp" target="_blank">Поступления на элеваторы (нал/безнал)</a>';
+    result+='<li><a href="elev41.asp" target="_blank">Остатки чужого товара на элеваторах</a>';
   }
   if ((Session.Contents("Islogist")==true)) {
     result+='<li><a href="repContractQuota.asp" target="_blank">Квоты</a>';
@@ -207,11 +208,15 @@ if (s!='') {
     result+='<li><a href="bankinget.asp" target="_blank">Поступление на счет</a>';
     result+='<li><a href="bankoutget.asp" target="_blank">Оплата со счета</a>';
     result+='<li><a href="acc71get.asp" target="_blank">Подотчетники</a>';
+    result+='<li><a href="elevatorsDebt.asp" target="_blank">Задолженность по Ф2</a>';
   };
   if ((Session.Contents("Isboss")==true)||(Session.Contents("Ismanager")==true)||(Session.Contents("Isbuch")==true)||(Session.Contents("Isbank")==true)||(Session.Contents("Islogist")==true)) 
   {
     result+='<li><a href="prices.asp" target="_blank">Закупочные цены</a><li><a href="pricesarc.asp" target="_blank">Архив закупочных цен</a>';
   };
+  if (Session.Contents("Ismail")==true) {
+    result+='<li><a href="mail.asp" target="_blank">Сообщения</a>';
+  }
   if (Session.Contents("Ispricer")==true) 
     result+='<li><a href="pricesdraft.asp" target="_blank">Проект закупочных цен</a>';
 //  if (Session.Contents("Isforeigner")==true) {result+='<li><a href="divrep.asp">Отчет</a>';};
@@ -263,7 +268,13 @@ function addCommas(nStr)
 	}
 	return x1 + x2;
 }
-
+function addZero(i) 
+{
+    if (i < 10) {
+        i = "0" + i;
+    }
+    return i;
+}
 function Cash(money) {
 money=Math.round(money*100).toString();
 if (money<10) return '0.0'+money;
@@ -299,7 +310,7 @@ function dateTimeToStr(ds) {
   smonth=(month<10?'0'+month:''+month);
   day=dt.getDate();
   sday=(day<10?'0'+day:''+day);
-  return sday+'.'+smonth+'.'+dt.getFullYear()+' '+dt.getHours()+':'+dt.getMinutes()+':'+dt.getSeconds();
+  return sday+'.'+smonth+'.'+dt.getFullYear()+' '+addZero(dt.getHours())+':'+addZero(dt.getMinutes())+':'+addZero(dt.getSeconds());
 }
 function parseDate(value) {
 	// parse date 24.12.2009
