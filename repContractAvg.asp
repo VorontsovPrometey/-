@@ -134,10 +134,12 @@ td+td+td+td {text-align:right;}
 <th>Начало</th> 
 <th>Окончание</th>
 <th>Трейдер(терминал)</th> 
-<th>Объем по контракту</th> 
-<th>Фактически завезено</th> 
-<th>Остаток квоты</th>
-<th>Цена продажи</th> 
+<th>Объем по контракту, т</th> 
+<th>Остаток квоты, т</th>
+<th>Фактически поставлено, т</th> 
+<th>Осталось поставить, т</th>
+<th>Нужно закупить, т</th> 
+<th>Цена продажи, в валюте</th> 
 <th>Средняя цена остатка квот</th>
 </tr>
 </thead>
@@ -154,7 +156,7 @@ var n = this,
  };
 
   var conn=null;
-  var sql="exec repContractQuote null, null, 0, 0, 840";
+  var sql="exec repContractQuote null, null, 2, 0, 840";
   try {
     conn=getConnection(false);
     conn.CommandTimeout=160;
@@ -170,15 +172,21 @@ var n = this,
        var till=rs("till").value;
        var trader=rs("contragentname").value;
        var traderport= rs("placename").value != null ? trader + " (" + rs("placename").value + ")" : trader;
-       var amount=rs("amount").value;
+       var amount=rs("amount").value;	   
+	   var supplyRest=amount;
+	   if (amount!=null) amount= (1.0*amount).formatMoney(0, '.', ',');
        var fact=rs("fact").value;
+	   supplyRest = supplyRest - fact;
        if (fact!=null) fact= (1.0*fact).formatMoney(0, '.', ',');
+	   if (supplyRest!=null) supplyRest= (1.0*supplyRest).formatMoney(0, '.', ',');
        var rest=rs("rest").value;
        if (rest!=null) rest= (1.0*rest).formatMoney(0, '.', ',');	   
        var valprice=rs("valprice").value;
        if (valprice!=null) valprice= (1.0*valprice).formatMoney(2, '.', ',');	   
 	   var avgprice=rs("avgprice").value;
-       if (avgprice!=null) avgprice= (1.0*avgprice).formatMoney(2, '.', ',');	
+       if (avgprice!=null) avgprice= (1.0*avgprice).formatMoney(2, '.', ',');
+	   var needtobuy=rs("needtobuy").value;
+       if (needtobuy!=null) needtobuy= (1.0*needtobuy).formatMoney(0, '.', ',');
 	   
        if (levl==-1) {
 %>
@@ -196,8 +204,10 @@ var n = this,
 <td><%=till%></td>
 <td><%=traderport%></td>
 <td><%=amount%></td>
+<td><b><%=rest%></b></td>
 <td><%=fact%></td>
-<td><%=rest%></td>
+<td><%=supplyRest%></td>
+<td><b><%=needtobuy%></b></td>
 <td><%=valprice%></td>
 <td><%=avgprice%></td>
 </tr>
