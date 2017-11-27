@@ -189,6 +189,7 @@ if (s!='') {
     result+='<li><a href="repContractAvg.asp" target="_blank">Средние цены по валютным контрактам</a>';
     result+='<li><a href="repContractQuota.asp" target="_blank">Квоты</a>';
     result+='<li><a href="cassaget.asp" target="_blank">Касса</a>';
+	result+='<li><a href="repPortRests.asp" target="_blank">Остатки товара в портах</a>';
   };
   if ((Session.Contents("Isboss")==true)||(Session.Contents("Ismanager")==true)) {
     result+='<li><a href="conman.asp" target="_blank">Поставки на контракты</a>';
