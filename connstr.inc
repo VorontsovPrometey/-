@@ -186,6 +186,7 @@ if (s!='') {
   { result+='<li><a href="delta2.asp" target="_blank">Дельта</a>';
     result+='<li><a href="costincom.asp" target="_blank">Доходы и расходы</a>';
 //    result+='<li><a href="auto3.asp"  target="_blank">Содержание авто</a>';
+    result+='<li><a href="repDebetors.asp" target="_blank">Просроченные дебеторы</a>';
     result+='<li><a href="repContractAvg.asp" target="_blank">Средние цены по валютным контрактам</a>';
     result+='<li><a href="repContractQuota.asp" target="_blank">Квоты</a>';
     result+='<li><a href="cassaget.asp" target="_blank">Касса</a>';
