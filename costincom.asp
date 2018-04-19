@@ -35,18 +35,18 @@ if ((s.indexOf('POST')>=0)&&(''+Request.Form("since")!='undefined')) {
 
 function sm(cost,divis) {
 //  cmd="sm.asp?since=<%=since %>&till=<%=d %>&divis="+divis+"&cost="+cost;
-  var sql="repAnalWeb '"+cost+"','"+divis+"',null,'<%=dateToSQL(since) %>','<%=dateToSQL(d) %>',null";
+  var sql="repAnalWebTest '"+cost+"','"+divis+"',null,'<%=dateToSQL(since) %>','<%=dateToSQL(d) %>',null";
   var cmd="tbl.asp?query="+escape(sql);
   window.open(cmd,'_blank')
 }
 function inc(cost,divis) {
 //  cmd="sm.asp?since=<%=since %>&till=<%=d %>&divis="+divis+"&cost="+cost;
-  var sql="repAnalWeb '"+cost+"','"+divis+"',null,'<%=dateToSQL(since) %>','<%=dateToSQL(d) %>',null";
+  var sql="repAnalWebTest '"+cost+"','"+divis+"',null,'<%=dateToSQL(since) %>','<%=dateToSQL(d) %>',null";
   var cmd="tbl.asp?query="+escape(sql);
   window.open(cmd,'_blank')
 }
 function g(goods,incom,divis) {
-  var sql="repAnalWeb '"+incom+"','"+divis+"','"+goods+"','<%=dateToSQL(since) %>','<%=dateToSQL(d) %>',null";
+  var sql="repAnalWebTest '"+incom+"','"+divis+"','"+goods+"','<%=dateToSQL(since) %>','<%=dateToSQL(d) %>',null";
   var cmd="tbl.asp?query="+escape(sql);
   window.open(cmd,'_blank')
 }
@@ -67,10 +67,14 @@ function addcosts(divis,kind,cost,name,summa){
 function addincoms(divis,kind,incom,name,summa){
   this.divis=divis; this.kind=kind; this.incom=incom; this.name=name; this.summa=summa;
 }
+function addgrdivis(mainDivis,divis,mainDivisName,divisName,summa){
+  this.mainDivis=mainDivis; this.divis=divis; this.mainDivisName=mainDivisName; this.divisName=divisName; this.summa=summa;
+}
 var divisrows=new Array();
 var goodsrows=new Array();
 var costrows=new Array();
 var incomrows=new Array();
+var grdivisrows=new Array();
 
 function writecolgroup(){
 Response.Write('<colgroup>'
@@ -106,6 +110,49 @@ function processDivis(kind, divis)
 	<tr>
 	<td>
 	<h3>Расходы</h3>
+<%
+	if (divis==grdivisrows[0].mainDivis)
+	{
+	  for (var t=0; t<grdivisrows.length;t++) {
+	  var gd=grdivisrows[t];
+%>
+	<details><summary align="left">
+		<table width="100%">
+		<colgroup>
+		<col  width="50%"/>
+		<col  width="50%"/>
+		</colgroup>
+		<tr>
+			<th><%=gd.divisName%></th>
+			<th><%=gd.summa%></th>
+		</tr>
+		</table>
+	</summary>
+	<table class="grid" width="100%">
+	<tbody>
+	<tr>
+	<th>статья</th>
+	<th>сумма</th>
+	</tr>
+<%
+  for (var i=0; i<costrows.length;i++) {
+    var c=costrows[i];
+    if (c.divis==gd.divis&&c.kind==kind) {
+%>
+	<tr>
+	<td><%=c.name%></td>
+	<td class="digit"><a href="javascript:sm('<%=c.cost%>','<%=c.divis%>')"><%=c.summa%></a></td>
+	</tr>
+<%
+    }
+  }
+%>
+	</table>
+	</details>
+<%
+		}	
+	} else {
+%>
 	<table class="grid" width="100%">
 	<tbody>
 	<tr>
@@ -126,6 +173,9 @@ function processDivis(kind, divis)
   }
 %>
 	</table>
+<%
+  }
+%>
 	</td>
 	<td>
 	<h3>Доходы</h3>
@@ -203,7 +253,7 @@ function processDivis(kind, divis)
 };
 // выполняем и запоминаем
   var conn=null;
-  var sql="exec repCostIncoms null,'"+dateToSQL(since)+"','"+dateToSQL(d)+"'";
+  var sql="exec repCostIncomsTest null,'"+dateToSQL(since)+"','"+dateToSQL(d)+"'";
   try {
 
     conn=getConnection(false);
@@ -234,6 +284,14 @@ function processDivis(kind, divis)
     };
     rs=rs.NextRecordset;
 
+	var rowno=0;
+    while (!rs.eof) {
+      grdivisrows[rowno]=new addgrdivis(rs(0).value,rs(1).value,rs(2).value,rs(3).value,1*rs(4));
+      rowno++;
+      rs.MoveNext();
+    };
+    rs=rs.NextRecordset;	
+	
     rowno=0;
     while (!rs.eof) {
       incomrows[rowno]=new addincoms(rs(0).value,rs(1).value,rs(2).value,rs(3).value,1*rs(4).value);
@@ -247,7 +305,7 @@ function processDivis(kind, divis)
 %>
 	<div id="container">
 		<div id="inner">
-<h1>Доходы и расходы</h1>
+<h1>Прибыль</h1>
 <form name="criteria" action="costincom.asp" method="POST">
 <fieldset>
 с&nbsp;<input class="date" type=Text name="since" size=5 maxlength=10 value="<%=dateToStr(since) %>"> 
