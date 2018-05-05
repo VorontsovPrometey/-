@@ -184,15 +184,15 @@ if (s!='') {
   if (url=='default') {result+='<li><a href="newpwd.asp">Сменить пароль</a>';};
   if (Session.Contents("Isboss")==true) 
   { result+='<li><a href="delta2.asp" target="_blank">Дельта</a>';
-    result+='<li><a href="costincom.asp" target="_blank">Доходы и расходы</a>';
+    result+='<li><a href="costincomnew.asp" target="_blank">Прибыль текущая</a>';
 //    result+='<li><a href="auto3.asp"  target="_blank">Содержание авто</a>';
     result+='<li><a href="repDebetors.asp" target="_blank">Просроченные дебеторы</a>';
     result+='<li><a href="repContractAvg.asp" target="_blank">Средние цены по валютным контрактам</a>';
     result+='<li><a href="repContractQuota.asp" target="_blank">Квоты</a>';
-    result+='<li><a href="cassaget.asp" target="_blank">Касса</a>';
+    //result+='<li><a href="cassaget.asp" target="_blank">Касса</a>';
 	result+='<li><a href="repPortRests.asp" target="_blank">Остатки товара в портах</a>';
   };
-  if ((Session.Contents("Isboss")==true)||(Session.Contents("Ismanager")==true)) {
+  if ((Session.Contents("Isboss")==true)) {
     result+='<li><a href="conman.asp" target="_blank">Поставки на контракты</a>';
   }
   if ((Session.Contents("Isboss")==true)||(Session.Contents("Islogist")==true)||(Session.Contents("Ismanager")==true)) {
@@ -218,6 +218,12 @@ if (s!='') {
   };
   if (Session.Contents("Ismail")==true) {
     result+='<li><a href="mail.asp" target="_blank">Сообщения</a>';
+  }
+    if ((Session.Contents("Issysadm")==true)) {
+    result+='<li><a href="costincom.asp" target="_blank">Доходы и расходы (старый)</a>';
+  }
+  if (Session.Contents("Isboss")==true) {
+    result+='<li><a href="costincomprofit.asp" target="_blank">Прибыль по закр. контрактам</a>';
   }
   if (Session.Contents("Ispricer")==true) 
     result+='<li><a href="pricesdraft.asp" target="_blank">Проект закупочных цен</a>';
