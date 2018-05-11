@@ -213,53 +213,6 @@ Response.Write('<colgroup>'
 
 %>
 
-<tr><td colspan="7"><h2>Результат деятельности за период с <%=since%> по <%=till%></h2></td>
-<%
-    rs=rs.NextRecordset;
-    if (!rs.eof) 
-    {
-%>
-<tr><td>Прибыль</td><td class="number"><%=(1.0*rs("profit").value).formatMoney(0, '.', ',')%></td>
-<tr><td>Дополнительная прибыль</td><td class="number"><%=(1.0*rs("a105").value).formatMoney(0, '.', ',')%></td>
-<tr><td>Дополнительные убытки</td><td class="number"><%=(1.0*rs("a106").value).formatMoney(0, '.', ',')%></td>
-<tr><td>Результат деятельности</td><td class="number"><%=(1.0*rs("result").value).formatMoney(0, '.', ',')%></td>
-
-<tr><td colspan="7"><h2>Справки</h2></td>
-<tr><td>Недопоставки по договорам</td><td class="number"><%=(1.0*rs("contracts").value).formatMoney(0, '.', ',')%></td>
-<tr><td>Расходы по смете</td><td class="number"><%=(1.0*rs("monthcost").value).formatMoney(0, '.', ',')%></td>
-<tr><td>Курсовая разница USD</td><td class="number"><%=(1.0*rs("rateresult").value).formatMoney(0, '.', ',')%></td>
-<td class="number"><%=(1.0*rs("prevusd").value).formatMoney(0, '.', ',')%></td>
-<td class="number"><%=(1.0*rs("rate").value-rs("rateprev").value).formatMoney(0, '.', ',')%></td>
-<tr><td>Курсовая разница EUR</td><td class="number"><%=(1.0*rs("rateeurresult").value).formatMoney(0, '.', ',')%></td>
-<td class="number"><%=(1.0*rs("preveur").value).formatMoney(0, '.', ',')%></td>
-<td class="number"><%=(1.0*rs("rateeur").value-rs("ratepreveur").value).formatMoney(0, '.', ',')%></td>
-<%
-    };
-%>
-<tr><td colspan="7"><h2>Прибыль за день <%=rs("profitday").value%></h2></td><td colspan="7"><details><summary align="left"><span>
-<%  rs=rs.NextRecordset;
-%>
-	<tr><td>От реализации</td>
-<%	
-	var summa = 0;
-	var summatotal = 0;
-    while (!rs.eof) 
-    {
-		summa = 1.0*rs("summa").value
-		if(rs("id").value == 1)
-		{
-%>			<tr><td>- <%=rs("name").value%></td><td class="number"><%=(summa).formatMoney(0, '.', ',')%></td>
-<%		}
-		else	
-			{
-%>				<tr><td><%=rs("name").value%></td><td class="number"><%=(summa).formatMoney(0, '.', ',')%></td>
-<%			}
-		summatotal+= summa;
-        rs.MoveNext();
-    };
-%>		<tr><td>Итого :</td><td class="boldnumber"><b><%=(summatotal).formatMoney(0, '.', ',')%></b></td>
-
-
 </tbody>
 </table>
 <a href="elev.asp" target="_blank">Остатки на элеваторах</a>
