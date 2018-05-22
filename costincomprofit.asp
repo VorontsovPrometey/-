@@ -310,7 +310,7 @@ function processDivis(kind, divis)
 %>
 	<div id="container">
 		<div id="inner">
-<h1>Прибыль</h1>
+<h1>Прибыль по закр. контрактам</h1>
 <form name="criteria" action="costincomprofit.asp" method="POST">
 <fieldset>
 с&nbsp;<input class="date" type=Text name="since" size=5 maxlength=10 value="<%=dateToStr(since) %>"> 

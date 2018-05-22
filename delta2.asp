@@ -217,7 +217,6 @@ Response.Write('<colgroup>'
 </table>
 <a href="elev.asp" target="_blank">Остатки на элеваторах</a>
 <br/>
-<h2>Комментарии</h2>
 <ul>
 <%
     rs=rs.NextRecordset;
