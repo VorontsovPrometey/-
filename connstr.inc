@@ -196,7 +196,7 @@ if (s!='') {
   if ((Session.Contents("Isboss")==true)) {
     result+='<li><a href="conman.asp" target="_blank">Поставки на контракты (торговцы и элеваторы)</a>';
   }
-    if ((Session.Contents("Istreaty")==true)) {
+  if ((Session.Contents("Istreaty")==true) || (Session.Contents("Isjurist")==true)) {
     result+='<li><a href="repDebetors.asp" target="_blank">Просроченные дебеторы</a>';
   }
   if ((Session.Contents("Isboss")==true)||(Session.Contents("Islogist")==true)||(Session.Contents("Ismanager")==true)) {
