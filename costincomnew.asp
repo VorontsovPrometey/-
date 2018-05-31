@@ -35,7 +35,7 @@ if ((s.indexOf('POST')>=0)&&(''+Request.Form("since")!='undefined')) {
 
 function sm(cost,divis) {
 //  cmd="sm.asp?since=<%=since %>&till=<%=d %>&divis="+divis+"&cost="+cost;
-  var sql="repAnalWeb '"+cost+"','"+divis+"',null,'<%=dateToSQL(since) %>','<%=dateToSQL(d) %>',null";
+  var sql="repAnalWebCosts '"+cost+"','"+divis+"','<%=dateToSQL(since) %>','<%=dateToSQL(d) %>',null";
   var cmd="tbl.asp?query="+escape(sql);
   window.open(cmd,'_blank')
 }
