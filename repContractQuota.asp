@@ -195,7 +195,7 @@ var n = this,
        if (amount!=null) amount= (1.0*amount).formatMoney(3, '.', ',');
        var valprice=rs("valprice").value;
        if (valprice!=null) valprice= (1.0*valprice).formatMoney(2, '.', ',');
-       if (Session.Contents("Ismanager")==true) valprice='';
+       if (Session.Contents("Isboss")==false && Session.Contents("Ismanager")==true) valprice='';
 
        var reserved=rs("reserved").value;
        if (reserved!=null) reserved= (1.0*reserved).formatMoney(3, '.', ',');
