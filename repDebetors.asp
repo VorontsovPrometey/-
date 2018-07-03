@@ -62,6 +62,7 @@ function SwapAll(b) {
 		if (tbl.rows[i].querySelector('td input')) {tbl.rows[i].querySelector('td input').checked = b;}
 	}
 }
+
 </script>
 <style>
 .treetable {
@@ -113,19 +114,53 @@ td+td+td+td {text-align:right;}
 </style>
 
 <% WriteStyle()
+
+var s=''+Request.ServerVariables('Request_Method');
+var debtterm='';
+
+if ((s.indexOf('POST')>=0)&&(''+Request.Form("debtterm")!='undefined')) {
+  debtterm=''+Request.Form("debtterm");
+}
+var pdebtterm='null'
+if (debtterm!='') {pdebtterm="'"+debtterm+"'"};
+
 %>
 <title>Просроченные дебеторы</title>
 
 </head>
-
 <body>
 <% WriteHeader(); %>
 	<div id="container">
 		<div id="inner">
 
-<h1>Задолженность дебеторов более 10 дней</h1>
+<h1>Задолженность дебеторов</h1>
+
+<form name="criteria" action="repDebetors.asp" method="POST">
+<fieldset>
+<input name="go" type="submit" value="пересчитать" /><br>
+ срок задолженности более&nbsp;<select class="select" name="debtterm" >
+ <%
+	var temp='null'
+	for(var i=10; i >= 0; i--)
+	{
+		temp="'"+i+"'"
+		if(temp==pdebtterm)
+		{
+			%>  <option value="<%=i%>" selected><%=i%> дней</option><%
+		}
+		else
+		{
+			%>  <option value="<%=i%>" ><%=i%> дней</option><%
+		}
+	}
+%>
+</select> 
+</fieldset>
+</form>
+
 <button onclick="SwapAll(false);">Свернуть все</button></a>
 <button onclick="SwapAll(true);">Развернуть все</button></a>
+
 <br><br>
 <table class="treetable">
 <thead>
@@ -133,6 +168,7 @@ td+td+td+td {text-align:right;}
 <th>Показатель</th> 
 <th>Дебетор</th> 
 <th>Сумма, грн</th> 
+<th>Сумма, в валюте</th> 
 <th>Дней</th>
 <th>Последняя оплата</th>
 <th>Последняя поставка</th>
@@ -151,7 +187,7 @@ var n = this,
  };
 
   var conn=null;
-  var sql="exec repDebitorsWeb null";
+  var sql="exec repDebitorsWeb null, " + pdebtterm;
   try {
     conn=getConnection(false);
     conn.CommandTimeout=160;
@@ -166,8 +202,10 @@ var n = this,
 	   var prevsaldo=rs("prevsaldo").value;	   
 	   if (prevsaldo!=null) prevsaldo= (1.0*prevsaldo).formatMoney(0, '.', ' ');
        var contragent=rs("debitorname").value;
-       var amount=rs("saldo").value;	   
-	   if (amount!=null) amount= (1.0*amount).formatMoney(0, '.', ' ');
+       var amount=rs("saldo").value;
+	   if (amount!=null) amount= (1.0*amount).formatMoney(0, '.', ' ');	   
+       var amount2=rs("saldocur").value;		   
+	   if (amount2!=null) amount2= (1.0*amount2).formatMoney(0, '.', ' ');
        var term=rs("term").value;
        if (levl==-1) {
 %>
@@ -183,6 +221,7 @@ var n = this,
 %>
 <td><%=contragent%></td>
 <td><%=amount%></td>
+<td><%=amount2%></td>
 <td><%=term%></td>
 <td><%=dtdate%></td>
 <td><%=ctdate%></td>
