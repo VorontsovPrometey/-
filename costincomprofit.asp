@@ -90,7 +90,6 @@ Response.Write('<colgroup>'
 +'<col class="digit" width="10%"/>'
 +'<col class="digit" width="10%"/>'
 +'<col class="digit" width="10%"/>'
-+'<col class="digit" width="10%"/>'
 +'</colgroup>');
 }
 
@@ -103,7 +102,7 @@ function processDivis(kind, divis)
   }
 %>
 <tr>
-<td colspan="8">
+<td colspan="7">
 <details><summary align="left"></summary>
 <div style="display:block">
 	<table width="100%">
@@ -329,8 +328,7 @@ function processDivis(kind, divis)
 <th>в т.ч.доп расходы</th>
 <th>в т.ч.доп доходы</th>
 <th>Прибыль</th>
-<th>МТБ</th>
-<th>Будущие расходы</th>
+<th>Лизинг и оборудование</th>
 </tr>
 </thead>
 <tbody align="right">
@@ -344,19 +342,18 @@ for (var i=0;i<divisrows.length;i++)
 %></tbody></table></details></td></tr><%
     level--;
   }
-%><tr><td><%=r.name%></td><td><%=r.cost%></td><td><%=r.incom%></td><td><%=r.dopcost%></td><td><%=r.dopincom%></td><td><%=r.profit%></td><td><%=r.mtb%></td><td><%=r.future%></td></tr>
+%><tr><td><%=r.name%></td><td><%=r.cost%></td><td><%=r.incom%></td><td><%=r.dopcost%></td><td><%=r.dopincom%></td><td><%=r.profit%></td><td><%=r.mtb%></td></tr>
 <%
   if (r.kind==15) 
   {
  %><tr><td>---------------------------------------</td><td>--------------------</td><td>--------------------</td>
 													   <td>--------------------</td><td>--------------------</td>
-													   <td>--------------------</td><td>--------------------</td>
-													   <td>--------------------</td></tr><%
+													   <td>--------------------</td><td>--------------------</td></tr><%
   }
   if (((r.divis==null)&&(r.kind==1))) 
   {
     level++; 
-%><tr><td colspan="8"><details><summary align="left">в т.ч.</summary>
+%><tr><td colspan="7"><details><summary align="left">в т.ч.</summary>
 <table width="100%">
 <% writecolgroup(); %>
 <tbody align="right">
