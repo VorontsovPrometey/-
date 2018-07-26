@@ -14,6 +14,17 @@ Session.Timeout = 480
 <%
 WriteStyle(); 
 
+Number.prototype.formatMoney = function(c, d, t){
+var n = this, 
+    c = isNaN(c = Math.abs(c)) ? 2 : c, 
+    d = d == undefined ? "." : d, 
+    t = t == undefined ? "," : t, 
+    s = n < 0 ? "-" : "", 
+    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+    j = (j = i.length) > 3 ? j % 3 : 0;
+   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+ };
+
 // дата
 var s=''+Request.ServerVariables('Request_Method');
 var d=new Date();
@@ -128,7 +139,7 @@ function processDivis(kind, divis)
 		</colgroup>
 		<tr>
 			<th><%=gd.divisName%></th>
-			<th><%=gd.summa%></th>
+			<th><%=gd.summa.formatMoney(0, '.', ',')%></th>
 		</tr>
 		</table>
 	</summary>
@@ -145,7 +156,7 @@ function processDivis(kind, divis)
 %>
 	<tr>
 	<td><%=c.name%></td>
-	<td class="digit"><a href="javascript:sm('<%=c.cost%>','<%=c.divis%>')"><%=c.summa%></a></td>
+	<td class="digit"><a href="javascript:sm('<%=c.cost%>','<%=c.divis%>')"><%=c.summa.formatMoney(0, '.', ',')%></a></td>
 	</tr>
 <%
     }
@@ -170,7 +181,7 @@ function processDivis(kind, divis)
 %>
 	<tr>
 	<td><%=c.name%></td>
-	<td class="digit"><a href="javascript:sm('<%=c.cost%>','<%=c.divis%>')"><%=c.summa%></a></td>
+	<td class="digit"><a href="javascript:sm('<%=c.cost%>','<%=c.divis%>')"><%=c.summa.formatMoney(0, '.', ',')%></a></td>
 	</tr>
 <%
     }
@@ -212,8 +223,8 @@ function processDivis(kind, divis)
 %>
 	<tr>
 	<td><%=c.name %></td>
-	<td class="digit"><%=c.amount%></td>
-	<td class="digit"><a href="javascript:prof('<%=c.analkey%>')"><%=c.summa%></a></td>
+	<td class="digit"><%=c.amount.formatMoney(0, '.', ',')%></td>
+	<td class="digit"><a href="javascript:prof('<%=c.analkey%>')"><%=c.summa.formatMoney(0, '.', ',')%></a></td>
 
 	</tr>
 <%
@@ -223,8 +234,8 @@ function processDivis(kind, divis)
 %>
 	<tr>
 	<td>всего реализация</td>
-	<td class="digit"><%=q%></td>
-	<td class="digit"><%=sm%></td>
+	<td class="digit"><%=q.formatMoney(0, '.', ',')%></td>
+	<td class="digit"><%=sm.formatMoney(0, '.', ',')%></td>
 	</tr>
 <%
   }
@@ -237,7 +248,7 @@ function processDivis(kind, divis)
 <% if (qg>0) { %>
 	<td class="digit"></td>
 <% } %>
-	<td class="digit"><a href="javascript:inc('<%=c.incom%>','<%=c.divis%>')"><%=c.summa%></a></td>
+	<td class="digit"><a href="javascript:inc('<%=c.incom%>','<%=c.divis%>')"><%=c.summa.formatMoney(0, '.', ',')%></a></td>
 	</tr>
 <%
     }
@@ -342,7 +353,7 @@ for (var i=0;i<divisrows.length;i++)
 %></tbody></table></details></td></tr><%
     level--;
   }
-%><tr><td><%=r.name%></td><td><%=r.cost%></td><td><%=r.incom%></td><td><%=r.dopcost%></td><td><%=r.dopincom%></td><td><%=r.profit%></td><td><%=r.mtb%></td></tr>
+%><tr><td><%=r.name%></td><td><%=r.cost.formatMoney(0, '.', ',')%></td><td><%=r.incom.formatMoney(0, '.', ',')%></td><td><%=r.dopcost.formatMoney(0, '.', ',')%></td><td><%=r.dopincom.formatMoney(0, '.', ',')%></td><td><%=r.profit.formatMoney(0, '.', ',')%></td><td><%=r.mtb.formatMoney(0, '.', ',')%></td></tr>
 <%
   if (r.kind==15) 
   {
