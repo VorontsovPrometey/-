@@ -201,6 +201,7 @@ if (s!='') {
   }
   if ((Session.Contents("Isboss")==true)||(Session.Contents("Islogist")==true)||(Session.Contents("Ismanager")==true)) {
     result+='<li><a href="elev.asp" target="_blank">Остатки на элеваторах</a>';
+    result+='<li><a href="elevByRegion.asp" target="_blank">Остатки на элеваторах (по областям)</a>';
     result+='<li><a href="elevin.asp" target="_blank">Поступления на элеваторы (нал/безнал)</a>';
     result+='<li><a href="elev41.asp" target="_blank">Остатки чужого товара на элеваторах</a>';
   }
