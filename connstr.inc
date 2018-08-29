@@ -182,53 +182,43 @@ s=(''+Session.Contents("Password"));
 if (s!='') { 
   result+='<li><a href="logout.asp">Выйти</a>';
   if (url=='default') {result+='<li><a href="newpwd.asp">Сменить пароль</a>';};
-  if (Session.Contents("Isboss")==true) 
+  if (Session.Contents("Istopmanager")==true) 
   { result+='<li><a href="delta2.asp" target="_blank">Дельта</a>';
     result+='<li><a href="costincomnew.asp" target="_blank">Прибыль текущая</a>';
     result+='<li><a href="costincomprofit.asp" target="_blank">Прибыль по закр. контрактам</a>';
 //    result+='<li><a href="auto3.asp"  target="_blank">Содержание авто</a>';
     result+='<li><a href="repDebetors.asp" target="_blank">Просроченные дебеторы</a>';
-//    result+='<li><a href="repContractAvg.asp" target="_blank">Средние цены по валютным контрактам</a>';
-    result+='<li><a href="repContractQuota.asp" target="_blank">Квоты</a>';
-    //result+='<li><a href="cassaget.asp" target="_blank">Касса</a>';
-	result+='<li><a href="repPortRests.asp" target="_blank">Остатки товара в портах</a>';
-  };
-  if ((Session.Contents("Isboss")==true)) {
-    result+='<li><a href="conman.asp" target="_blank">Поставки на контракты (торговцы и элеваторы)</a>';
   }
-  if ((Session.Contents("Istreaty")==true) || (Session.Contents("Isjurist")==true)) {
+  if (Session.Contents("Istreaty")==true || Session.Contents("Isjurist")==true) {
     result+='<li><a href="repDebetors.asp" target="_blank">Просроченные дебеторы</a>';
   }
   if ((Session.Contents("Isboss")==true)||(Session.Contents("Islogist")==true)||(Session.Contents("Ismanager")==true)) {
+    result+='<li><a href="repContractQuota.asp" target="_blank">Квоты</a>';
+	result+='<li><a href="conman.asp" target="_blank">Поставки на контракты (торговцы и элеваторы)</a>';
+	result+='<li><a href="repPortRests.asp" target="_blank">Остатки товара в портах</a>';
     result+='<li><a href="elev.asp" target="_blank">Остатки на элеваторах</a>';
     result+='<li><a href="elevByRegion.asp" target="_blank">Остатки на элеваторах (по областям)</a>';
     result+='<li><a href="elevin.asp" target="_blank">Поступления на элеваторы (нал/безнал)</a>';
     result+='<li><a href="elev41.asp" target="_blank">Остатки чужого товара на элеваторах</a>';
   }
-  if ((Session.Contents("Islogist")==true)) {
-    result+='<li><a href="repContractQuota.asp" target="_blank">Квоты</a>';
-  }
   if (Session.Contents("Ismanager")==true) 
   { 
-    result+='<li><a href="repContractQuota.asp" target="_blank">Квоты</a>';
-    result+='<li><a href="naklinget.asp" target="_blank">Приходные накладные</a>';
-    result+='<li><a href="bankinget.asp" target="_blank">Поступление на счет</a>';
-    result+='<li><a href="bankoutget.asp" target="_blank">Оплата со счета</a>';
+//    result+='<li><a href="repContractQuota.asp" target="_blank">Квоты</a>';
+//    result+='<li><a href="naklinget.asp" target="_blank">Приходные накладные</a>';
+//    result+='<li><a href="bankinget.asp" target="_blank">Поступление на счет</a>';
+//    result+='<li><a href="bankoutget.asp" target="_blank">Оплата со счета</a>';
     result+='<li><a href="acc71get.asp" target="_blank">Подотчетники</a>';
-    result+='<li><a href="elevatorsDebt.asp" target="_blank">Задолженность по Ф2</a>';
+//    result+='<li><a href="elevatorsDebt.asp" target="_blank">Задолженность по Ф2</a>';
   };
   if ((Session.Contents("Isboss")==true)||(Session.Contents("Ismanager")==true)||(Session.Contents("Isbuch")==true)||(Session.Contents("Isbank")==true)||(Session.Contents("Islogist")==true)) 
   {
     result+='<li><a href="prices.asp" target="_blank">Закупочные цены</a><li><a href="pricesarc.asp" target="_blank">Архив закупочных цен</a>';
   };
-  if (Session.Contents("Ismail")==true) {
-    result+='<li><a href="mail.asp" target="_blank">Сообщения</a>';
-  }
-    if ((Session.Contents("Issysadm")==true)) {
+  if ((Session.Contents("Issysadm")==true)) {
     result+='<li><a href="costincom.asp" target="_blank">Доходы и расходы (старый)</a>';
   }
-  if (Session.Contents("Ispricer")==true) 
-    result+='<li><a href="pricesdraft.asp" target="_blank">Проект закупочных цен</a>';
+//  if (Session.Contents("Ispricer")==true) 
+//   result+='<li><a href="pricesdraft.asp" target="_blank">Проект закупочных цен</a>';
 //  if (Session.Contents("Isforeigner")==true) {result+='<li><a href="divrep.asp">Отчет</a>';};
 } else { 
 //  result+='<li><a href="newuser.asp">New user</a>'; 
