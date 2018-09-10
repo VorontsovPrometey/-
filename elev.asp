@@ -53,7 +53,8 @@ if (keeperType!='') {ptype="'"+keeperType+"'"};
 if (keeper!='') {pkeeper="'"+keeper+"'"};
 %>
 <script type="text/javascript">
-function ai(x,y,label){this.x=x; this.y=y; this.label=label; this.indexLabel = ''+y;}
+ function ai(x,y,yRound,label,legend,val){this.x=x; this.y=y; this.indexLabelFormatter= function (e) { return  yRound; }; 
+										  this.label=label; this.indexLabel = ''+y; this.legend=legend; this.val=val;}
 var items0 = new Array();
 var items1 = new Array();
 var items2 = new Array();
@@ -74,8 +75,6 @@ var n = this,
     j = (j = i.length) > 3 ? j % 3 : 0;
    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
  };
-
-
   var goodsname='';
   var goods='';
   var amount1='';
@@ -156,17 +155,17 @@ var n = this,
       var ss = rs('avgprice').value!=0?Math.round(1.0*rs('avgprice').value):0;
 	  var priceNDS = rs('avgpriceNDS').value!=0?Math.round(1.0*rs('avgpriceNDS').value):0;
       var ename = rs('elevatorname').value;
-	  %>items0[<%=i%>]=new ai(<%=j+25%>,<%=0%>,'<%=ename%>');
+	  %>items0[<%=i%>]=new ai(<%=j+25%>,<%=0%>,<%=0%>,'<%=ename%>');
 <%
-      %>items1[<%=i%>]=new ai(<%=j%>,<%=rs('amount1').value%>,'<%=ename%>');
+      %>items1[<%=i%>]=new ai(<%=j%>,<%=(1.0*rs('amount1').value).formatMoney(3, '.', '')%>,<%=(1.0*rs('amount1').value).formatMoney(0, '.', '')%>,'<%=ename%>','Остатки на <%=since%>','т');
 <%
-      %>items2[<%=i%>]=new ai(<%=j%>,<%=rs('amount2').value%>,'<%=ename%>');
+      %>items2[<%=i%>]=new ai(<%=j%>,<%=(1.0*rs('amount2').value).formatMoney(3, '.', '')%>,<%=(1.0*rs('amount2').value).formatMoney(0, '.', '')%>,'<%=ename%>','Остатки на <%=till%>','т');
 <%
-      %>items3[<%=i%>]=new ai(<%=j%>,<%=rs('inp').value%>,'<%=ename%>');
+      %>items3[<%=i%>]=new ai(<%=j%>,<%=(1.0*rs('inp').value).formatMoney(3, '.', '')%>,<%=(1.0*rs('inp').value).formatMoney(0, '.', '')%>,'<%=ename%>','Поступило c <%=since%> по <%=till%>','т');
 <%
-      %>items4[<%=i%>]=new ai(<%=j%>,<%=ss%>,'<%=ename%>');
+      %>items4[<%=i%>]=new ai(<%=j%>,<%=ss%>,<%=ss%>,'<%=ename%>','Цена без НДС','грн');
 <%      
-	  %>items5[<%=i%>]=new ai(<%=j%>,<%=priceNDS%>,'<%=ename%>');
+	  %>items5[<%=i%>]=new ai(<%=j%>,<%=priceNDS%>,<%=priceNDS%>,'<%=ename%>','Цена с НДС','грн');
 <%	  
       i++;
 	  pos = pos + (rs('amount2').value > 0 ? rs('amount2').value : 0);
@@ -179,15 +178,16 @@ var n = this,
   }
 %>
 </script>
-<div id="chartContainer" style="width: 100%; font-size:15">
+<div id="chartContainer" style="width: 95%; font-size:15">
 </div>                                                                                                                                                
 </body>
 <script type="text/javascript">
+window.onload = function () {
 
     var chart = new CanvasJS.Chart("chartContainer",
     {
       backgroundColor: "#fbfbe5",
-	  height: (items2.length + 1) * 140,
+	  height: items2.length + 1 > 3 ? (items2.length + 1) * 66 : (items2.length + 1) * 250,
 	  fontColor: "black",
       title:{
         text: "<%=goodsname%> " + "(Общий остаток: <%=pos%>," + " Общий долг: <%=neg%>)",
@@ -212,24 +212,31 @@ var n = this,
         verticalAlign: "bottom",
 		fontColor: "black"
       },
+	  toolTip: {
+		shared: true,
+		fontSize: 18,
+		fontStyle: "normal",
+		content: toolTipFormatter
+
+	  },
       data: [
       {        
         type: "bar",  
-		indexLabelFontSize: 16,
+		indexLabelFontSize: 10,
 		indexLabelFontColor: "rgba(0,0,0,.0)",
 		showInLegend: false, 
 		visible: true,
         dataPoints: items0      },
       {        
         type: "bar",  
-		indexLabelFontSize: 16,
+		indexLabelFontSize: 10,
 		indexLabelFontColor: "black",
 		showInLegend: true, 
         legendText: "Остатки на <%=since%>: <%=amount1%> т",
         dataPoints: items1      },
       {        
         type: "bar",  
-		indexLabelFontSize: 16,
+		indexLabelFontSize: 10,
 		indexLabelFontColor: "black",
         //axisYType: "secondary",
         showInLegend: true,
@@ -245,7 +252,7 @@ var n = this,
 
       {        
         type: "bar",  
-		indexLabelFontSize: 16,
+		indexLabelFontSize: 10,
 		indexLabelFontColor: "black",
         //axisYType: "secondary",
         showInLegend: true,
@@ -255,7 +262,7 @@ var n = this,
 
       {        
         type: "bar",  
-	indexLabelFontSize: 16,
+	indexLabelFontSize: 10,
 		indexLabelFontColor: "black",
         showInLegend: true,
 		color: "#add8e6",
@@ -264,7 +271,7 @@ var n = this,
 
       {        
         type: "bar",  
-	indexLabelFontSize: 16,
+	indexLabelFontSize: 10,
 		indexLabelFontColor: "black",
         showInLegend: true,
 		backgroundColor: "#FF0000",
@@ -289,6 +296,23 @@ var n = this,
     });
 
 chart.render();
+
+function toolTipFormatter(e) {
+	if(e.entries.length > 1)
+	{
+		var str="<strong>" + e.entries[0].dataPoint.label + "</strong> <br/>";
+		var str1="";
+		for (var i = 0; i < e.entries.length; i++){
+			str1 = str1.concat("<span style= \"color:"+e.entries[i].dataSeries.color + "\">" + e.entries[i].dataPoint.legend + ":</span>  <b>" + e.entries[i].dataPoint.y + " " + e.entries[i].dataPoint.val + "</b><br/>") ;
+		}
+		
+			return str.concat(str1);
+	}
+	
+	return "";
+}
+
+}
 </script>
 
 </html>
