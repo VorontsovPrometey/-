@@ -149,6 +149,10 @@ var n = this,
 	var j=25;
 	var pos = 0;
 	var neg = 0;
+	var maxPrice = 3000;
+	var minPrice = 0;
+	var maxRest = 200;
+	var minRest = 0;
     while (!rs.eof) 
     {
       var d = rs('amount2').value-rs('amount1').value;
@@ -170,16 +174,22 @@ var n = this,
       i++;
 	  pos = pos + (rs('amount2').value > 0 ? rs('amount2').value : 0);
 	  neg = neg + (rs('amount2').value < 0 ? rs('amount2').value : 0);
+	  maxPrice = Math.max(maxPrice, priceNDS);
+	  maxRest = Math.max(maxRest, 1.0*rs('amount1').value, 1.0*rs('amount2').value, 1.0*rs('inp').value);
+	  minRest = Math.min(minRest, 1.0*rs('amount1').value, 1.0*rs('amount2').value, 1.0*rs('inp').value);
 	  j+=50;
       rs.MoveNext();
     };
+	maxPrice = Math.round(1.2*maxPrice);
+	minPrice = minRest >= 0 ? 0 : -maxPrice;
+	maxRest = Math.round(1.2*Math.max(maxRest, Math.abs(minRest)));
+	minRest = minRest >= 0 ? 0 : -maxRest;
   } catch(e) {
     Response.Write(e.message+'; Ошибка выполнения запроса: '+sql);
   }
 %>
 </script>
-<div id="chartContainer" style="width: 95%; font-size:15">
-</div>                                                                                                                                                
+<div id="chartContainer" style="width: 80%; font-size:15;" align="center" ></div>                                                                                                                                                
 </body>
 <script type="text/javascript">
 window.onload = function () {
@@ -187,21 +197,27 @@ window.onload = function () {
     var chart = new CanvasJS.Chart("chartContainer",
     {
       backgroundColor: "#fbfbe5",
-	  height: items2.length + 1 > 3 ? (items2.length + 1) * 66 : (items2.length + 1) * 250,
+	  height: items2.length + 1 > 3 ? (items2.length + 1) * 110 : (items2.length + 1) * 250,
 	  fontColor: "black",
       title:{
         text: "<%=goodsname%> " + "(Общий остаток: <%=pos%>," + " Общий долг: <%=neg%>)",
-	fontSize: 30
-      },
-      axisY2: {
-        title:"Остатки на элеваторах,т ",
-	titleFontSize: 24,
+		fontSize: 26
       },
       animationEnabled: true,
       axisY: {
         title: "Остатки на элеваторах,т ",
-	titleFontSize: 24,
-        labelFontSize: 14
+		titleFontSize: 24,
+        labelFontSize: 14,
+		maximum: <%=maxRest%>,
+		minimum: <%=minRest%>
+      },
+      axisY2: {
+        //title:"Остатки на элеваторах,т ",
+		titleFontSize: 24,
+        labelFontSize: 14,
+		axisYType: "secondary",
+		maximum: <%=maxPrice%>,
+		minimum: <%=minPrice%>
       },
       axisX :{
 	  	interval: 50,
@@ -229,15 +245,17 @@ window.onload = function () {
         dataPoints: items0      },
       {        
         type: "bar",  
-		indexLabelFontSize: 10,
+		indexLabelFontSize: 15,
 		indexLabelFontColor: "black",
+		axisYIndex: 0,
 		showInLegend: true, 
         legendText: "Остатки на <%=since%>: <%=amount1%> т",
         dataPoints: items1      },
       {        
         type: "bar",  
-		indexLabelFontSize: 10,
+		indexLabelFontSize: 15,
 		indexLabelFontColor: "black",
+		axisYIndex: 0,
         //axisYType: "secondary",
         showInLegend: true,
         legendText: "Остатки на <%=till%>: <%=amount2%> т",
@@ -252,8 +270,9 @@ window.onload = function () {
 
       {        
         type: "bar",  
-		indexLabelFontSize: 10,
+		indexLabelFontSize: 15,
 		indexLabelFontColor: "black",
+		axisYIndex: 0,
         //axisYType: "secondary",
         showInLegend: true,
 		color: "#64A333",
@@ -262,8 +281,10 @@ window.onload = function () {
 
       {        
         type: "bar",  
-	indexLabelFontSize: 10,
+	indexLabelFontSize: 15,
 		indexLabelFontColor: "black",
+		axisYIndex: 1,
+		axisYType: "secondary",
         showInLegend: true,
 		color: "#add8e6",
         legendText: "Цена без НДС: <%=avgprice%> грн",
@@ -271,8 +292,10 @@ window.onload = function () {
 
       {        
         type: "bar",  
-	indexLabelFontSize: 10,
+	indexLabelFontSize: 15,
 		indexLabelFontColor: "black",
+		axisYIndex: 1,
+		axisYType: "secondary",
         showInLegend: true,
 		backgroundColor: "#FF0000",
 		color: "#7998a1",
