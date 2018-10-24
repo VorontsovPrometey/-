@@ -141,7 +141,7 @@ if (debtterm!='') {pdebtterm="'"+debtterm+"'"};
  срок задолженности более&nbsp;<select class="select" name="debtterm" >
  <%
 	var temp='null'
-	for(var i=10; i >= 0; i--)
+	for(var i=0; i <= 10; i++)
 	{
 		temp="'"+i+"'"
 		if(temp==pdebtterm)

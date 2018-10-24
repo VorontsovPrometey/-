@@ -29,7 +29,7 @@ var n = this,
 // дата
 var s=''+Request.ServerVariables('Request_Method');
 var d=new Date();
-var diff=5;
+var diff=0;
 if ((s.indexOf('POST')>=0)&&(''+Request.Form("ondate")!='undefined')) {
   d=parseDate(""+Request.Form("ondate"));
 } else {
@@ -112,9 +112,10 @@ Response.Write('<colgroup>'
 <fieldset>
 с&nbsp;<input class="date" type=Text name="since" size=5 maxlength=10 value="<%=dateToStr(since) %>"> 
 по&nbsp;<input class="date" type=Text name="ondate" size=5 maxlength=10 value="<%=dateToStr(d) %>">
-<br/>%<select name="diff"><option value="5" <% if (diff==5){%>selected<%}%>>5%</option>
-<option value="2" <% if (diff==2){%>selected<%}%>>2%</option>
-<option value="0"  <% if (diff==0){%>selected<%}%>>все</option></select>
+<br/>%<select name="diff"><option value="0" <% if (diff==0){%>selected<%}%>>все</option>
+                          <option value="2" <% if (diff==2){%>selected<%}%>>2%</option>
+						  <option value="5" <% if (diff==5){%>selected<%}%>>5%</option>
+</select>
 <input name="go" type="submit" value="пересчитать" class="button1" />
 </fieldset>
 </form>
