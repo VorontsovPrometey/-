@@ -124,9 +124,9 @@ function processDivis(kind, divis)
 	<tbody>
 	<tr>
 	<td>
-	<h3>Расходы</h3>
+	<h3 align="center">Расходы</h3>
 <%
-	if (divis==grdivisrows[0].mainDivis)
+	if (grdivisrows[0] != null && divis==grdivisrows[0].mainDivis)
 	{
 	  for (var t=0; t<grdivisrows.length;t++) {
 	  var gd=grdivisrows[t];
@@ -193,7 +193,7 @@ function processDivis(kind, divis)
 %>
 	</td>
 	<td>
-	<h3>Доходы</h3>
+	<h3 align="center">Доходы</h3>
 	<table class="grid" width="100%">
 	<colgroup>
 		<col  width="70%"/>
