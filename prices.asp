@@ -8,11 +8,11 @@ Server.ScriptTimeOut = 600
 <%
 function add(key,value){this.key=key; this.value=value;}
 function addelev(key,value,sequence){this.key=key; this.value=value; this.sequence=sequence;}
-function addcell(elevator,culture,price1,price2,price3,price4,ch1,ch2,ch3,ch4)
+function addcell(elevator,culture,price1,price2,price3,price4,price11,price12,ch1,ch2,ch3,ch4,ch11,ch12)
 {
   this.elevator=elevator; this.culture=culture;
-  this.price1=price1;this.price2=price2;this.price3=price3;this.price4=price4;
-  this.ch1=ch1;this.ch2=ch2;this.ch3=ch3;this.ch4=ch4;
+  this.price1=price1;this.price2=price2;this.price3=price3;this.price4=price4;this.price11=price11;this.price12=price12;
+  this.ch1=ch1;this.ch2=ch2;this.ch3=ch3;this.ch4=ch4;this.ch11=ch11;this.ch12=ch12;
 }
 
 var culture=new Array();
@@ -48,7 +48,8 @@ var qcell=0;
     rs=rs.NextRecordset;
     while (!rs.eof) 
     {
-      cell[qcell]=new addcell(1*rs(1),1*rs(2),rs(3).value,rs(4).value,rs(5).value,rs(6).value,rs(7).value,rs(8).value,rs(9).value,rs(10).value);
+      cell[qcell]=new addcell(1*rs(1),1*rs(2),rs(3).value,rs(4).value,rs(5).value,rs(6).value,rs(7).value,rs(8).value,
+											  rs(9).value,rs(10).value,rs(11).value,rs(12).value,rs(13).value,rs(14).value);
       qcell++;
       rs.MoveNext();
     };
@@ -146,6 +147,8 @@ function getv(e,p,c)
           else if(p==2) return {v:cell[j].price2,c:cell[j].ch2};
           else if (p==3) return {v:cell[j].price3,c:cell[j].ch3};
           else if (p==4) return {v:cell[j].price4,c:cell[j].ch4};
+          else if (p==11) return {v:cell[j].price11,c:cell[j].ch11};
+          else if (p==12) return {v:cell[j].price12,c:cell[j].ch12};
           break;
         }
       }
