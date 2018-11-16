@@ -7,10 +7,10 @@ Server.ScriptTimeOut = 600
 <!--  #include file="connstr.inc" -->
 <%
 function add(key,value){this.key=key; this.value=value;}
-function addcell(elevator,culture,price1,price2,price3)
+function addcell(elevator,culture,price1,price2,price3,price4,price11,price12)
 {
   this.elevator=elevator; this.culture=culture;
-  this.price1=price1;this.price2=price2;this.price3=price3;
+  this.price1=price1;this.price2=price2;this.price3=price3;this.price4=price4;this.price11=price11;this.price12=price12;
 }
 
 var s=''+Request.ServerVariables('Request_Method');
@@ -54,7 +54,7 @@ var qcell=0;
     rs=rs.NextRecordset;
     while (!rs.eof) 
     {
-      cell[qcell]=new addcell(1*rs(1),1*rs(2),rs(3).value,rs(4).value,rs(5).value);
+      cell[qcell]=new addcell(1*rs(1),1*rs(2),rs(3).value,rs(4).value,rs(5).value,rs(6).value,rs(7).value,rs(8).value);
       qcell++;
       rs.MoveNext();
     };
@@ -72,6 +72,8 @@ WriteStyle();
 .p1 {background-color:#fffbf0;}
 .p2 {background-color:#C0C0C0;}
 .p3 {background-color:#a6caf0;}
+.p4 {background-color:#b2fd83;}
+
 #prices {width: 100%}
 </style>
 </HEAD>
@@ -123,6 +125,7 @@ function getv(e,p,c)
           if (p==1) return cell[j].price1;
           else if(p==2) return cell[j].price2;
           else if (p==3) return cell[j].price3;
+          else if (p==4) return cell[j].price4;
           break;
         }
       }
@@ -137,7 +140,7 @@ function getv(e,p,c)
   for(var e=0;e<qelev;e++)
   {
   	var priceInd = 0;
-    for (var p=1;p<=3;p++)
+    for (var p=1;p<=4;p++)
     {
       var skip = true;
       for(var c=0;c<qcol;c++)
