@@ -12,7 +12,9 @@ Session.Timeout = 480
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-<script type="text/javascript" src="canvasjs.min.js"></script>
+<script type="text/javascript" src="chart.js"></script>
+<script type="text/javascript" src="chartjs-plugin-datalabels.min.js"></script>
+<script type="text/javascript" src="chartjs-plugin-barchart-background.js"></script>
 <%
 WriteStyle(); 
 // дата
@@ -53,14 +55,12 @@ if (keeperType!='') {ptype="'"+keeperType+"'"};
 if (keeper!='') {pkeeper="'"+keeper+"'"};
 %>
 <script type="text/javascript">
- function ai(x,y,yRound,label,legend,val){this.x=x; this.y=y; this.indexLabelFormatter= function (e) { return  yRound; }; 
-										  this.label=label; this.indexLabel = ''+y; this.legend=legend; this.val=val;}
-var items0 = new Array();
-var items1 = new Array();
-var items2 = new Array();
-var items3 = new Array();
-var items4 = new Array();
-var items5 = new Array();
+var labels = new Array();
+var startRests = new Array();
+var endRests = new Array();
+var input = new Array();
+var price = new Array();
+var ndsPrice = new Array();
 </script>
 </head>
 <body>
@@ -159,18 +159,19 @@ var n = this,
       var ss = rs('avgprice').value!=0?Math.round(1.0*rs('avgprice').value):0;
 	  var priceNDS = rs('avgpriceNDS').value!=0?Math.round(1.0*rs('avgpriceNDS').value):0;
       var ename = rs('elevatorname').value;
-	  %>items0[<%=i%>]=new ai(<%=j+25%>,<%=0%>,<%=0%>,'<%=ename%>');
+	  %>startRests[<%=i%>]=<%=(1.0*rs('amount1').value).formatMoney(3, '.', '')%>;
 <%
-      %>items1[<%=i%>]=new ai(<%=j%>,<%=(1.0*rs('amount1').value).formatMoney(3, '.', '')%>,<%=(1.0*rs('amount1').value).formatMoney(0, '.', '')%>,'<%=ename%>','Остатки на <%=since%>','т');
+	  %>endRests[<%=i%>]=<%=(1.0*rs('amount2').value).formatMoney(3, '.', '')%>;
 <%
-      %>items2[<%=i%>]=new ai(<%=j%>,<%=(1.0*rs('amount2').value).formatMoney(3, '.', '')%>,<%=(1.0*rs('amount2').value).formatMoney(0, '.', '')%>,'<%=ename%>','Остатки на <%=till%>','т');
+	  %>input[<%=i%>]=<%=(1.0*rs('inp').value).formatMoney(3, '.', '')%>;
 <%
-      %>items3[<%=i%>]=new ai(<%=j%>,<%=(1.0*rs('inp').value).formatMoney(3, '.', '')%>,<%=(1.0*rs('inp').value).formatMoney(0, '.', '')%>,'<%=ename%>','Поступило c <%=since%> по <%=till%>','т');
+	  %>price[<%=i%>]=<%=ss%>;
 <%
-      %>items4[<%=i%>]=new ai(<%=j%>,<%=ss%>,<%=ss%>,'<%=ename%>','Цена без НДС','грн');
-<%      
-	  %>items5[<%=i%>]=new ai(<%=j%>,<%=priceNDS%>,<%=priceNDS%>,'<%=ename%>','Цена с НДС','грн');
-<%	  
+	  %>ndsPrice[<%=i%>]=<%=priceNDS%>;
+<%
+	  %>labels[<%=i%>]='<%=ename%>';
+<%
+
       i++;
 	  pos = pos + (rs('amount2').value > 0 ? rs('amount2').value : 0);
 	  neg = neg + (rs('amount2').value < 0 ? rs('amount2').value : 0);
@@ -189,153 +190,120 @@ var n = this,
   }
 %>
 </script>
-<div id="chartContainer" style="width: 80%; font-size:15;" align="center" ></div>                                                                                                                                                
+<div id="chartContainer" style="width: 100%;" align="center" >                                                                                                                                                
+<canvas id="bar-chart-grouped" style="width: 100%;"></canvas>
+</div>                                                                                                                                       
 </body>
 <script type="text/javascript">
-window.onload = function () {
+var ctx = document.getElementById('bar-chart-grouped').getContext('2d');
+document.getElementById('bar-chart-grouped').style.height = labels.length * 120 + 'px';
 
-    var chart = new CanvasJS.Chart("chartContainer",
-    {
-      backgroundColor: "#fbfbe5",
-	  height: items2.length + 1 > 3 ? (items2.length + 1) * 110 : (items2.length + 1) * 250,
-	  fontColor: "black",
-      title:{
-        text: "<%=goodsname%> " + "(Общий остаток: <%=pos%>," + " Общий долг: <%=neg%>)",
-		fontSize: 26
-      },
-      animationEnabled: true,
-      axisY: {
-        title: "Остатки на элеваторах,т ",
-		titleFontSize: 24,
-        labelFontSize: 14,
-		maximum: <%=maxRest%>,
-		minimum: <%=minRest%>
-      },
-      axisY2: {
-        //title:"Остатки на элеваторах,т ",
-		titleFontSize: 24,
-        labelFontSize: 14,
-		axisYType: "secondary",
-		maximum: <%=maxPrice%>,
-		minimum: <%=minPrice%>
-      },
-      axisX :{
-	  	interval: 50,
-		interlacedColor: "rgba(253,229,85,.5)",
-        labelFontSize: 14
-      },
-      legend: {
-        verticalAlign: "bottom",
-		fontColor: "black"
-      },
-	  toolTip: {
-		shared: true,
-		fontSize: 18,
-		fontStyle: "normal",
-		content: toolTipFormatter
-
-	  },
-      data: [
-      {        
-        type: "bar",  
-		indexLabelFontSize: 10,
-		indexLabelFontColor: "rgba(0,0,0,.0)",
-		showInLegend: false, 
-		visible: true,
-        dataPoints: items0      },
-      {        
-        type: "bar",  
-		indexLabelFontSize: 15,
-		indexLabelFontColor: "black",
-		axisYIndex: 0,
-		showInLegend: true, 
-        legendText: "Остатки на <%=since%>: <%=amount1%> т",
-        dataPoints: items1      },
-      {        
-        type: "bar",  
-		indexLabelFontSize: 15,
-		indexLabelFontColor: "black",
-		axisYIndex: 0,
-        //axisYType: "secondary",
-        showInLegend: true,
-        legendText: "Остатки на <%=till%>: <%=amount2%> т",
-        dataPoints: items2      },
-//      {        
-//        type: "bar",  
-//	indexLabelFontSize: 16,
-//        //axisYType: "secondary",
-//        showInLegend: true,
-//        legendText: "Разница между красным и синим: <%=Math.round((amount2-amount1)*1000.0)/1000.0%> т",
-//        dataPoints: items3      },
-
-      {        
-        type: "bar",  
-		indexLabelFontSize: 15,
-		indexLabelFontColor: "black",
-		axisYIndex: 0,
-        //axisYType: "secondary",
-        showInLegend: true,
-		color: "#64A333",
-        legendText: "Поступило за период с <%=since%> по <%=till%>: <%=inp%> т",
-        dataPoints: items3      },
-
-      {        
-        type: "bar",  
-	indexLabelFontSize: 15,
-		indexLabelFontColor: "black",
-		axisYIndex: 1,
-		axisYType: "secondary",
-        showInLegend: true,
-		color: "#add8e6",
-        legendText: "Цена без НДС: <%=avgprice%> грн",
-        dataPoints: items4      },
-
-      {        
-        type: "bar",  
-	indexLabelFontSize: 15,
-		indexLabelFontColor: "black",
-		axisYIndex: 1,
-		axisYType: "secondary",
-        showInLegend: true,
-		backgroundColor: "#FF0000",
-		color: "#7998a1",
-        legendText: "Цена c НДС: <%=avgpriceNDS%> грн",
-        dataPoints: items5      
-       }
-      ],
-      legend: {
-        cursor:"pointer",
-	fontSize: 20,
-        itemclick : function(e){
-          if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-            e.dataSeries.visible = false;
-          }
-          else{
-            e.dataSeries.visible = true;
-          }
-          chart.render();
+new Chart(ctx, {
+    type: 'horizontalBar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: "Остатки на <%=since%>: <%=amount1%> т   ",
+		  xAxisID: 'A',
+		  position: 'bottom',
+		  fontSize: 26,
+          backgroundColor: "#c24642",
+		  datalabels: {	align: 'end',	anchor: 'end'},
+          data: startRests
+        },
+        {
+          label: "Остатки на <%=till%>: <%=amount2%> т   ",
+		  xAxisID: 'A',
+          backgroundColor: "#7f6084",
+		  datalabels: {	align: 'end',	anchor: 'end'},
+          data: endRests
+        },
+        {
+          label: "Поступило за период с <%=since%> по <%=till%>: <%=inp%> т   ",
+		  xAxisID: 'A',
+          backgroundColor: "#64a333",
+		  datalabels: {	align: 'end',	anchor: 'end'},
+          data: input
+        },
+        {
+          label: "Цена без НДС: <%=avgprice%> грн   ",
+		  xAxisID: 'B',
+          backgroundColor: "#add8e6",
+		  datalabels: {	align: 'end',	anchor: 'end'},
+          data: price
+        },
+        {
+          label: "Цена c НДС: <%=avgpriceNDS%> грн   ",
+		  xAxisID: 'B',
+          backgroundColor: "#7998a1",
+		  datalabels: {	align: 'end',	anchor: 'end'},
+          data: ndsPrice
         }
-      }
-    });
+      ]
+    },
+    options: {
+		devicePixelRatio: 1,
+		legend: {
+			position: 'bottom',            
+			labels: {
+				fontSize: 20,
+                fontColor: '#000'
+            }
+		},
+		title: {
+				display: true,
+				fontSize: 26,
+				fontColor: '#000',
+				text: "<%=goodsname%> " + "(Общий остаток: <%=pos%>," + " Общий долг: <%=neg%>)"
+		},
+        elements: {
+          rectangle: {
+            borderWidth: 2,
+          }
+        },
+		scales: {
+				  xAxes: [{
+					id: 'A',
+					type: 'linear',
+					position: 'top',
+					display: false,
+					ticks: {  max: <%=maxRest%>,  min: <%=minRest%>	}
+				  }, {
+					id: 'B',
+					type: 'linear',
+					position: 'bottom',
+					ticks: {  max: <%=maxPrice%>,  min: <%=minPrice%>	}
+				  }]
+				},
+			plugins: {
+					datalabels: {
+						color: 'black',
+						display: function(context) {
+							return context.dataset.data[context.dataIndex];
+						},
+						font: {
+							size: 16,
+							weight: 'bold'
+						},
+						formatter: Math.round
+					},
+					chartJsPluginBarchartBackground: {
+							color: '#fcf09d',
+							mode: 'odd'
+					}
+				},
+        tooltips: {
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    var label = data.datasets[tooltipItem.datasetIndex].label.split(":")[0] + ': ' + tooltipItem.xLabel;
+                    return label;
+                }
+            }
+        }
+    }
+});
 
-chart.render();
-
-function toolTipFormatter(e) {
-	if(e.entries.length > 1)
-	{
-		var str="<strong>" + e.entries[0].dataPoint.label + "</strong> <br/>";
-		var str1="";
-		for (var i = 0; i < e.entries.length; i++){
-			str1 = str1.concat("<span style= \"color:"+e.entries[i].dataSeries.color + "\">" + e.entries[i].dataPoint.legend + ":</span>  <b>" + e.entries[i].dataPoint.y + " " + e.entries[i].dataPoint.val + "</b><br/>") ;
-		}
-		
-			return str.concat(str1);
-	}
-	
-	return "";
-}
-
-}
 </script>
 
 </html>
