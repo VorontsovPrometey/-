@@ -268,7 +268,7 @@ window.onload = function () {
 		indexLabelFontColor: "black",
         //axisYType: "secondary",
         showInLegend: true,
-		color: "#fff510",
+		color: "#5B6167",
         legendText: "Продано за период с <%=since%> по <%=till%>: <%=bills%> т",
         dataPoints: items6      },
 
