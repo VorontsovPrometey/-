@@ -207,6 +207,7 @@ function processDivis(kind, divis)
 	<th>статья</th>
 <% if (qg>0) { %>
 	<th>количество</th>
+	<th>прибыль на т</th>
 <% } %>
 	<th>сумма</th>
 	</tr>
@@ -224,6 +225,7 @@ function processDivis(kind, divis)
 	<tr>
 	<td><%=c.name %></td>
 	<td class="digit"><%=c.amount.formatMoney(0, '.', ',')%></td>
+	<td class="digit"><%=(c.summa/c.amount).formatMoney(0, '.', ',')%></td>
 	<td class="digit"><a href="javascript:prof('<%=c.analkey%>')"><%=c.summa.formatMoney(0, '.', ',')%></a></td>
 
 	</tr>
@@ -235,6 +237,7 @@ function processDivis(kind, divis)
 	<tr>
 	<td>всего реализация</td>
 	<td class="digit"><%=q.formatMoney(0, '.', ',')%></td>
+	<td class="digit"><%=(sm/q).formatMoney(0, '.', ',')%></td>
 	<td class="digit"><%=sm.formatMoney(0, '.', ',')%></td>
 	</tr>
 <%
