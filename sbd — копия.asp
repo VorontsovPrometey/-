@@ -74,18 +74,34 @@ for (var i=0;i<dates.length;i++) {
   var name="";
   rs=rs.NextRecordset;
   var oldgoods=null;
+  var oldname="";
   while (!rs.eof) {
     var goods=rs('goods').value;
     var dt=""+rs('dt').value;
     var name=""+rs('name').value;
-%><td class="number"><%=rs('snk').value%><br/><i><%=rs('skk').value%></i><%
+    if ((oldgoods)&&(oldgoods!=goods)) {
+%>
+<tr><td><b><%=oldname%></b></td><td>остаток<br/><b>изменение</b></td>
+<%   
+     var q=0;
+     for (var i=0;i<dates.length;i++) {
+%><td class="number"><%
+       var v = vals[dates[i].dt];
+       if (!v) v=0.0;
+       q+=v;
+%><%=q%><br/><b><%=v%></b><%
 %></td><%
+    };
+    vals = {};
+%></tr><%
+    };
     oldgoods = goods;
-    vals[dt] = 1.0*+rs('skk').value;
+	oldname = name;
+    vals[dt] = rs('skk').value;
     rs.MoveNext();
   };
 %>
-<tr><td><b><%=name%></b></td><td>остаток<br/><i>изменение</i></td>
+<tr><td><b><%=oldname%></b></td><td>остаток<br/><b>изменение</b></td>
 <%   
      var q=0;
      for (var i=0;i<dates.length;i++) {
@@ -93,7 +109,7 @@ for (var i=0;i<dates.length;i++) {
        var v = 1.0*vals[dates[i]];
        if (!v) v=0.0;
        q+=v;
-%><%=q%><br/><i><%=v%></i><%
+%><%=q%><br/><b><%=v%></b><%
 %></td><%
      }
 } catch(e) {

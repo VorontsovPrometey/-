@@ -12,9 +12,7 @@ Session.Timeout = 480
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-<script type="text/javascript" src="chart.js"></script>
-<script type="text/javascript" src="chartjs-plugin-datalabels.min.js"></script>
-<script type="text/javascript" src="chartjs-plugin-barchart-background.js"></script>
+<script type="text/javascript" src="canvasjs.min.js"></script>
 <%
 WriteStyle(); 
 // дата
@@ -55,12 +53,13 @@ if (keeperType!='') {ptype="'"+keeperType+"'"};
 if (keeper!='') {pkeeper="'"+keeper+"'"};
 %>
 <script type="text/javascript">
-var labels = new Array();
-var startRests = new Array();
-var endRests = new Array();
-var input = new Array();
-var price = new Array();
-var ndsPrice = new Array();
+function ai(x,y,label){this.x=x; this.y=y; this.label=label; this.indexLabel = ''+y;}
+var items0 = new Array();
+var items1 = new Array();
+var items2 = new Array();
+var items3 = new Array();
+var items4 = new Array();
+var items5 = new Array();
 </script>
 </head>
 <body>
@@ -75,6 +74,8 @@ var n = this,
     j = (j = i.length) > 3 ? j % 3 : 0;
    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
  };
+
+
   var goodsname='';
   var goods='';
   var amount1='';
@@ -89,7 +90,7 @@ var n = this,
 
 // выполняем и запоминаем
   var conn=null;
-  var sql="exec repElevatorsRests "+psince+","+ptill+","+pgoods+","+pkeeper+","+ptype;
+  var sql="exec repElevatorsRests "+psince+","+ptill+","+pgoods+","+pkeeper+","+ptype+",-43,1";
   try {
     conn=getConnection(false);
     conn.CommandTimeout=160;
@@ -112,7 +113,7 @@ var n = this,
       price42=1*rs('price42').value;
     };
 %>
-<form name="criteria" class="form2" action="elev2.asp" method="POST">
+<form name="criteria" class="form2" action="elevByRegion.asp" method="POST">
 <fieldset class="fieldset">
 с&nbsp;<input class="date" type=Text name="since" size=5 maxlength=10 value="<%=dateToStr(since) %>">
 по&nbsp;<input class="date" type=Text name="till" size=5 maxlength=10 value="<%=dateToStr(till) %>"> <br>
@@ -149,161 +150,145 @@ var n = this,
 	var j=25;
 	var pos = 0;
 	var neg = 0;
-	var maxPrice = 3000;
-	var minPrice = 0;
-	var maxRest = 200;
-	var minRest = 0;
     while (!rs.eof) 
     {
       var d = rs('amount2').value-rs('amount1').value;
       var ss = rs('avgprice').value!=0?Math.round(1.0*rs('avgprice').value):0;
 	  var priceNDS = rs('avgpriceNDS').value!=0?Math.round(1.0*rs('avgpriceNDS').value):0;
       var ename = rs('elevatorname').value;
-	  %>startRests[<%=i%>]=<%=(1.0*rs('amount1').value).formatMoney(3, '.', '')%>;
+	  %>items0[<%=i%>]=new ai(<%=j+25%>,<%=0%>,'<%=ename%>');
 <%
-	  %>endRests[<%=i%>]=<%=(1.0*rs('amount2').value).formatMoney(3, '.', '')%>;
+      %>items1[<%=i%>]=new ai(<%=j%>,<%=rs('amount1').value%>,'<%=ename%>');
 <%
-	  %>input[<%=i%>]=<%=(1.0*rs('inp').value).formatMoney(3, '.', '')%>;
+      %>items2[<%=i%>]=new ai(<%=j%>,<%=rs('amount2').value%>,'<%=ename%>');
 <%
-	  %>price[<%=i%>]=<%=ss%>;
+      %>items3[<%=i%>]=new ai(<%=j%>,<%=rs('inp').value%>,'<%=ename%>');
 <%
-	  %>ndsPrice[<%=i%>]=<%=priceNDS%>;
-<%
-	  %>labels[<%=i%>]='<%=ename%>';
-<%
-
+      %>items4[<%=i%>]=new ai(<%=j%>,<%=ss%>,'<%=ename%>');
+<%      
+	  %>items5[<%=i%>]=new ai(<%=j%>,<%=priceNDS%>,'<%=ename%>');
+<%	  
       i++;
 	  pos = pos + (rs('amount2').value > 0 ? rs('amount2').value : 0);
 	  neg = neg + (rs('amount2').value < 0 ? rs('amount2').value : 0);
-	  maxPrice = Math.max(maxPrice, priceNDS);
-	  maxRest = Math.max(maxRest, 1.0*rs('amount1').value, 1.0*rs('amount2').value, 1.0*rs('inp').value);
-	  minRest = Math.min(minRest, 1.0*rs('amount1').value, 1.0*rs('amount2').value, 1.0*rs('inp').value);
 	  j+=50;
       rs.MoveNext();
     };
-	maxPrice = Math.round(1.2*maxPrice);
-	minPrice = minRest >= 0 ? 0 : -maxPrice;
-	maxRest = Math.round(1.2*Math.max(maxRest, Math.abs(minRest)));
-	minRest = minRest >= 0 ? 0 : -maxRest;
   } catch(e) {
     Response.Write(e.message+'; Ошибка выполнения запроса: '+sql);
   }
 %>
 </script>
-<div id="chartContainer" style="width: 100%;" align="center" >                                                                                                                                                
-<canvas id="bar-chart-grouped" style="width: 100%;"></canvas>
-</div>                                                                                                                                       
+<div id="chartContainer" style="width: 100%; font-size:15">
+</div>                                                                                                                                                
 </body>
 <script type="text/javascript">
-var ctx = document.getElementById('bar-chart-grouped').getContext('2d');
-document.getElementById('bar-chart-grouped').style.height = labels.length * 120 + 'px';
 
-new Chart(ctx, {
-    type: 'horizontalBar',
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: "Остатки на <%=since%>: <%=amount1%> т   ",
-		  xAxisID: 'A',
-		  position: 'bottom',
-		  fontSize: 26,
-          backgroundColor: "#c24642",
-		  datalabels: {	align: 'end',	anchor: 'end'},
-          data: startRests
-        },
-        {
-          label: "Остатки на <%=till%>: <%=amount2%> т   ",
-		  xAxisID: 'A',
-          backgroundColor: "#7f6084",
-		  datalabels: {	align: 'end',	anchor: 'end'},
-          data: endRests
-        },
-        {
-          label: "Поступило за период с <%=since%> по <%=till%>: <%=inp%> т   ",
-		  xAxisID: 'A',
-          backgroundColor: "#64a333",
-		  datalabels: {	align: 'end',	anchor: 'end'},
-          data: input
-        },
-        {
-          label: "Цена без НДС: <%=avgprice%> грн   ",
-		  xAxisID: 'B',
-          backgroundColor: "#add8e6",
-		  datalabels: {	align: 'end',	anchor: 'end'},
-          data: price
-        },
-        {
-          label: "Цена c НДС: <%=avgpriceNDS%> грн   ",
-		  xAxisID: 'B',
-          backgroundColor: "#7998a1",
-		  datalabels: {	align: 'end',	anchor: 'end'},
-          data: ndsPrice
-        }
-      ]
-    },
-    options: {
-		devicePixelRatio: 1,
-		legend: {
-			position: 'bottom',            
-			labels: {
-				fontSize: 20,
-                fontColor: '#000'
-            }
-		},
-		title: {
-				display: true,
-				fontSize: 26,
-				fontColor: '#000',
-				text: "<%=goodsname%> " + "(Общий остаток: <%=pos%>," + " Общий долг: <%=neg%>)"
-		},
-        elements: {
-          rectangle: {
-            borderWidth: 2,
+    var chart = new CanvasJS.Chart("chartContainer",
+    {
+      backgroundColor: "#fbfbe5",
+	  height: (items2.length + 1) * 140,
+	  fontColor: "black",
+      title:{
+        text: "<%=goodsname%> " + "(Общий остаток: <%=pos%>," + " Общий долг: <%=neg%>)",
+	fontSize: 30
+      },
+      axisY2: {
+        title:"Остатки на элеваторах,т ",
+	titleFontSize: 24,
+      },
+      animationEnabled: true,
+      axisY: {
+        title: "Остатки на элеваторах,т ",
+	titleFontSize: 24,
+        labelFontSize: 14
+      },
+      axisX :{
+	  	interval: 50,
+		interlacedColor: "rgba(253,229,85,.5)",
+        labelFontSize: 14
+      },
+      legend: {
+        verticalAlign: "bottom",
+		fontColor: "black"
+      },
+      data: [
+      {        
+        type: "bar",  
+		indexLabelFontSize: 16,
+		indexLabelFontColor: "rgba(0,0,0,.0)",
+		showInLegend: false, 
+		visible: true,
+        dataPoints: items0      },
+      {        
+        type: "bar",  
+		indexLabelFontSize: 16,
+		indexLabelFontColor: "black",
+		showInLegend: true, 
+        legendText: "Остатки на <%=since%>: <%=amount1%> т",
+        dataPoints: items1      },
+      {        
+        type: "bar",  
+		indexLabelFontSize: 16,
+		indexLabelFontColor: "black",
+        //axisYType: "secondary",
+        showInLegend: true,
+        legendText: "Остатки на <%=till%>: <%=amount2%> т",
+        dataPoints: items2      },
+//      {        
+//        type: "bar",  
+//	indexLabelFontSize: 16,
+//        //axisYType: "secondary",
+//        showInLegend: true,
+//        legendText: "Разница между красным и синим: <%=Math.round((amount2-amount1)*1000.0)/1000.0%> т",
+//        dataPoints: items3      },
+
+      {        
+        type: "bar",  
+		indexLabelFontSize: 16,
+		indexLabelFontColor: "black",
+        //axisYType: "secondary",
+        showInLegend: true,
+		color: "#64A333",
+        legendText: "Поступило за период с <%=since%> по <%=till%>: <%=inp%> т",
+        dataPoints: items3      },
+
+      {        
+        type: "bar",  
+	indexLabelFontSize: 16,
+		indexLabelFontColor: "black",
+        showInLegend: true,
+		color: "#add8e6",
+        legendText: "Цена без НДС: <%=avgprice%> грн",
+        dataPoints: items4      },
+
+      {        
+        type: "bar",  
+	indexLabelFontSize: 16,
+		indexLabelFontColor: "black",
+        showInLegend: true,
+		backgroundColor: "#FF0000",
+		color: "#7998a1",
+        legendText: "Цена c НДС: <%=avgpriceNDS%> грн",
+        dataPoints: items5      
+       }
+      ],
+      legend: {
+        cursor:"pointer",
+	fontSize: 20,
+        itemclick : function(e){
+          if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+            e.dataSeries.visible = false;
           }
-        },
-		scales: {
-				  xAxes: [{
-					id: 'A',
-					type: 'linear',
-					position: 'top',
-					display: false,
-					ticks: {  max: <%=maxRest%>,  min: <%=minRest%>	}
-				  }, {
-					id: 'B',
-					type: 'linear',
-					position: 'bottom',
-					ticks: {  max: <%=maxPrice%>,  min: <%=minPrice%>	}
-				  }]
-				},
-			plugins: {
-					datalabels: {
-						color: 'black',
-						display: function(context) {
-							return context.dataset.data[context.dataIndex];
-						},
-						font: {
-							size: 16,
-							weight: 'bold'
-						},
-						formatter: Math.round
-					},
-					chartJsPluginBarchartBackground: {
-							color: '#fcf09d',
-							mode: 'odd'
-					}
-				},
-        tooltips: {
-            callbacks: {
-                label: function(tooltipItem, data) {
-                    var label = data.datasets[tooltipItem.datasetIndex].label.split(":")[0] + ': ' + tooltipItem.xLabel;
-                    return label;
-                }
-            }
+          else{
+            e.dataSeries.visible = true;
+          }
+          chart.render();
         }
-    }
-});
+      }
+    });
 
+chart.render();
 </script>
 
 </html>

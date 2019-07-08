@@ -10,7 +10,7 @@ Session.Timeout = 480
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 <STYLE>
 html {
-	font-size: 72.5%;
+	font-size: 80%;
 	font-family: verdana;
 }
 table {
@@ -73,7 +73,7 @@ let hcols = 4;
 let hrows = 1;
 let frows = 1;
 let totalscol = 2;
-var heute =  1;  // индекс колонки с сегодн€шней датой. ƒелит план и факт
+var heute =  1000;  // индекс колонки с сегодн€шней датой. ƒелит план и факт
 var now = "<%  
 var now = dateToStr(new Date());
 Response.Write(now.substr(6,4)+"-"+now.substr(3,2)+"-"+now.substr(0,2)) 
@@ -163,6 +163,47 @@ for (var i=0;i<rows.length;i++) {
 <%
 }
 %>];
+
+var decodeMap = {};
+var win1251 = new TextDecoder("windows-1251");
+for (var i = 0x00; i < 0xFF; i++) {
+  var hex = (i <= 0x0F ? "0" : "") +      // zero-padded
+            i.toString(16).toUpperCase();
+  decodeMap[hex] = win1251.decode(Uint8Array.from([i]));
+}
+
+function percentEncodedWin1251ToDOMString(str) {
+  return str.replace(/%([0-9A-F]{2})/g,
+    (match, hex) => decodeMap[hex]);
+}
+
+function fnExcelReport()
+{
+  var tab_text="<table border='2px'><tr bgcolor='#87AFC6'>";
+  var textRange; var j=0;
+  let tbl = document.getElementById('tbl'); // id of table
+  tab_text += "<td>название</td><td>план</td><td>факт</td><td>на начало</td>";
+  for (var d = 0; d< dates.length; d++) {
+      tab_text += "<td>" +dmy(dates[d])+"</td>";
+  };
+  tab_text += "</tr>";
+
+  for (var r = 0; r< data.length; r++) {
+    let dat = data[r];
+    tab_text += "<tr><td>"+dat.n+"</td><td>"+dat.x+"</td><td>"+dat.z+"</td><td>"+(dat.p==undefined?dat.a:'')+"</td>"
+    for (var d = 0; d< dat.dates.length; d++) {
+      let hc = dat.dates[d];
+      tab_text += "<td>" +hc.v+"</td>";
+    };
+    tab_text += "</tr>";
+  }
+    tab_text=tab_text+"</table>";
+    var ua = window.navigator.userAgent;
+    let sa = window.open('data:application/vnd.ms-excel;charset=windows-1251,'+ '\uFEFF'  + encodeURIComponent(tab_text));  
+    return (sa);
+}
+
+
 var btprev;
 var btnext;
 // пр€чем / показываем детальные строки группы
@@ -351,8 +392,11 @@ function recalcRow(rid) {
     totalf += Math.round(data[r].dates[i].v);
   data[r].x = totalf;
   // до даты "сегодн€" - факт
-  for (var i = 0; i<=heute;i++)
+  for (var i = 0; i<=heute;i++) {
+    if (i>=data[r].dates.length)
+      break;
     totalp += Math.round(data[r].dates[i].v);
+  };
   data[r].z = totalp;
   // отоги ќ—Ѕ
   if (!data[r].p) {
@@ -589,6 +633,7 @@ function toCol(txt,tel) {
 <BUTTON id="btPrev" onclick="prevDate()"><-</BUTTON>
 <select id="seldate"></select>
 <BUTTON id="btNext" onclick="nextDate()">-></BUTTON>
+<button id="btnExport" onclick="fnExcelReport();"> Excel </button>
  нопки означают: <image class="bqp"/>рассчитать план <image class="bqf"/>вз€ть факт <image class="bs"/>сохранить 
 </p>
 <div id="info"></div>

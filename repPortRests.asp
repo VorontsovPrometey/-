@@ -89,11 +89,11 @@ function SwapAll(b) {
 	display:table-row;
 }
 .treetable .lev1 {
-	background:#EEE8CD;
+	background:#79f965;
 	display:table-row;
 }
 .lev2 {
-	background:#fbfbe5;
+	background:#f0f0e5;
 }
 .lev3 {
 	background:#fbfbe5;
@@ -131,7 +131,12 @@ td+td+td+td {text-align:right;}
 <thead>
 <tr>
 <th>Культура / Порт</th> 
-<th>Количество, т</th> 
+<th>Завезено по контракту, т</th>
+<th>Принято в порт, т</th>
+<th>Товар в пути, т</th>
+<th>Выставлены счета, т</th>
+<th>Не выставлены счета, т</th>
+<th>Ответственный трейдер</th>
 </tr>
 </thead>
 <%
@@ -155,17 +160,26 @@ var n = this,
     while (!rs.eof) 
     {
        var levl=rs("levl").value;
-       if (levl>=1) {rs.MoveNext(); continue;};
+       //if (levl>=2) {rs.MoveNext(); continue;};
        var name=rs("name").value;
 	   if (name!=null && name=="Пшеница") name="Пшеница (смешанные)";
        var till=rs("till").value;
        var contragent=rs("contragent").value;
+	   var manager=rs("manager").value;
        var amount=rs("amount").value;	   
+       var totalamount=rs("totalamount").value;	   
+       var reestr=rs("reestr").value;	   
+	   var price=rs("price").value;
+	   var notreestr=totalamount-reestr;
+	   var billamount=totalamount-amount;
 	   if (amount!=null) amount= (1.0*amount).formatMoney(0, '.', ',');
-	   var price=rs("price").value;	   
+	   if (totalamount!=null) totalamount= (1.0*totalamount).formatMoney(0, '.', ',');
+	   if (reestr!=null) reestr= (1.0*reestr).formatMoney(0, '.', ',');
 	   if (price!=null) price= (1.0*price).formatMoney(0, '.', ',');
-	   
-       if (levl==-1) {
+	   if (notreestr!=null) notreestr= (1.0*notreestr).formatMoney(0, '.', ',');
+	   if (billamount!=null) billamount= (1.0*billamount).formatMoney(0, '.', ',');
+ 	   
+       if (levl<=0) {
 %>
 <tr class="lev<%=levl+2%>">
 <td><label><input type="checkbox"><a onclick="sh(this)"><%=name%></a></label></td>
@@ -177,7 +191,12 @@ var n = this,
 <%
        }
 %>
-<td><%=amount%></td>
+<td><%=totalamount%></td>
+<td><%=reestr%></td>
+<td><%=notreestr%></td>
+<td><%=billamount%></td>
+<td><b><%=amount%></b></td>
+<td><%=manager%></td>
 </tr>
 <%
       rs.MoveNext();

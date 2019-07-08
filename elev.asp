@@ -15,7 +15,7 @@ Session.Timeout = 480
 <script type="text/javascript" src="chart.js"></script>
 <script type="text/javascript" src="chartjs-plugin-datalabels.min.js"></script>
 <script type="text/javascript" src="chartjs-plugin-barchart-background.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 </head>
 <%
 WriteStyle(); 
@@ -109,7 +109,7 @@ var n = this,
 <fieldset class="fieldset">
 с&nbsp;<input class="date" type=Text name="since" size=5 maxlength=10 value="<%=dateToStr(since) %>">
 по&nbsp;<input class="date" type=Text name="till" size=5 maxlength=10 value="<%=dateToStr(till) %>"> <br>
-культура&nbsp;<select class="select" name="goods" id='crop'> <br>
+культура&nbsp;<select class="select" name="goods" id='crop' onblur="myBlur(this.id)" ondblclick="myBlur(this.id)" onwheel="wheelChangecrop()" onclick="myClick(this.id)"> <br>
 <%
     rs=rs.NextRecordset;
     while (!rs.eof) 
@@ -120,7 +120,7 @@ var n = this,
     };
 %>
 </select><br>
-хранитель&nbsp;<select class="select" name="keeper" > <br>
+хранитель&nbsp;<select class="select" name="keeper" id="idKeeper" onblur="myBlur(this.id)" ondblclick="myBlur(this.id)" onwheel="wheelChangeidKeeper()" onclick="myClick(this.id)"> <br>
 <%
     rs=rs.NextRecordset;
     while (!rs.eof) 
@@ -131,7 +131,7 @@ var n = this,
     };
 %>
 </select><br>
-группировка&nbsp;<select class="select" name="grouping" > <br>
+группировка&nbsp;<select class="select" name="grouping" id="idGrouping" onblur="myBlur(this.id)" ondblclick="myBlur(this.id)" onwheel="wheelChangeidGrouping()" onclick="myClick(this.id)"> <br>
 <%
     rs=rs.NextRecordset;
     while (!rs.eof) 
@@ -143,14 +143,8 @@ var n = this,
 %>
 </select><br>
 &nbsp;<input name="go" type="submit" value="пересчитать" class="button1" />
-</fieldset>  
+</fieldset>
 </form>
-<div style='margin-left: 30%;'>
-  <input type='radio' id='vse' name="c" onchange="exe()" checked=""><label for="vse" style='font-size: 25px; margin-right: 40px;'>Все</label>
-  <input type='radio' id='zerno' name="c" onchange="exe()"><label for="zerno" style='font-size: 25px; margin-right: 40px;'>Зерно</label>
-  <input type='radio' id='fertilizer' name="c" onchange="exe()"><label for="fertilizer" style='font-size: 25px; margin-right: 40px;'>Удобрения</label>
-  <input type='radio' id='dizel' name="c" onchange="exe()"><label for="dizel" style='font-size: 25px; margin-right: 40px;'>Дизтопливо</label>
-</div>
 <script type="text/javascript">
 var barsCount = 6;
 var chartData = new Array();
@@ -186,129 +180,76 @@ for (var ind = 0; ind <= barsCount; ind++) {	chartData[ind] = new Array();}
 </script>
 <div id="chartContainer" style="width: 100%;" align="center" >                                                                                                                                                
 <canvas id="bar-chart-grouped" style="width: 100%;"></canvas>
-</div>
-<script>
-    function exe(){
-      if($("#zerno").prop("checked")) {
-        //crop
-        $('#crop option[value="{957D4230-1633-431B-B216-6F2FE7BEE262}"]').show();
-        $('#crop option[value="{4F419C20-BF07-44C1-917A-6ACF737EBB21}"]').show();
-        $('#crop option[value="{05207002-83C5-4F0A-BB27-14CCE15AA75C}"]').show();
-        $('#crop option[value="{AAFCDB26-F98A-4635-A29D-5F611BFAD055}"]').show();
-        $('#crop option[value="{557EEFFD-0EE1-44ED-AD4A-78F12DA44EAC}"]').show();
-        $('#crop option[value="{1BC93D91-BCA0-460B-9874-719DE5554B6D}"]').show();
-        $('#crop option[value="{79F5AA2E-49F2-4372-89FB-B770E39D70E7}"]').show();
-        $('#crop option[value="{98A58A73-A5D4-44E4-B3AB-3BFEE8FDDFFD}"]').show();
-        $('#crop option[value="{6657D554-F8F4-4173-A91B-DCA81C7EE5FE}"]').show();
-        $('#crop option[value="{7340BDF2-0257-4E2E-AC9B-C2D30B647C56}"]').show();
-        $('#crop option[value="{28A0663C-25AE-4946-8146-7A30AE03F6DE}"]').show();
-        $('#crop option[value="{D1AE2497-92AF-4CB9-9ABC-C379DC80BF10}"]').show();
-        $('#crop option[value="{C170702F-6C98-4F69-BA0A-1A1A769513B9}"]').show();
-        $('#crop option[value="{3A606884-25A1-444A-A7C8-3D9D777DC264}"]').show();
-        $('#crop option[value="{01DEE8D9-826A-4CD8-B63B-5A2BF21BEC53}"]').show();
-        $('#crop option[value="{9B52A786-FD73-4FF4-84B6-87BBDF09C13D}"]').show();
-        //fertilizer
-        $('#crop option[value="{A4CCC7FD-2451-4309-A700-15D5CB4807C6}"]').hide();
-        $('#crop option[value="{F543EB92-1D0C-48DA-8B6B-79988920FB1C}"]').hide();
-        $('#crop option[value="{6FD52381-D7BD-4619-A31B-80B764E12322}"]').hide();
-        $('#crop option[value="{E35800DA-E921-4E72-B86D-A362DE128360}"]').hide();
-        $('#crop option[value="{302A305D-F640-4989-901A-A76FA9FD54FD}"]').hide();
-        $('#crop option[value="{6B3764D8-E457-4A1E-868C-B398A84CE5D2}"]').hide();
-        $('#crop option[value="{7669A139-1ED3-4623-B43D-E6944E4753FA}"]').hide();
-        //dizel
-        $('#crop option[value="{0A9C4C52-AA5F-4994-98D3-65ED0457F9F8}"]').hide();
-      }
-      else if($("#fertilizer").prop("checked")) {
-        //crop
-        $('#crop option[value="{957D4230-1633-431B-B216-6F2FE7BEE262}"]').hide();
-        $('#crop option[value="{4F419C20-BF07-44C1-917A-6ACF737EBB21}"]').hide();
-        $('#crop option[value="{05207002-83C5-4F0A-BB27-14CCE15AA75C}"]').hide();
-        $('#crop option[value="{AAFCDB26-F98A-4635-A29D-5F611BFAD055}"]').hide();
-        $('#crop option[value="{557EEFFD-0EE1-44ED-AD4A-78F12DA44EAC}"]').hide();
-        $('#crop option[value="{1BC93D91-BCA0-460B-9874-719DE5554B6D}"]').hide();
-        $('#crop option[value="{79F5AA2E-49F2-4372-89FB-B770E39D70E7}"]').hide();
-        $('#crop option[value="{98A58A73-A5D4-44E4-B3AB-3BFEE8FDDFFD}"]').hide();
-        $('#crop option[value="{6657D554-F8F4-4173-A91B-DCA81C7EE5FE}"]').hide();
-        $('#crop option[value="{7340BDF2-0257-4E2E-AC9B-C2D30B647C56}"]').hide();
-        $('#crop option[value="{28A0663C-25AE-4946-8146-7A30AE03F6DE}"]').hide();
-        $('#crop option[value="{D1AE2497-92AF-4CB9-9ABC-C379DC80BF10}"]').hide();
-        $('#crop option[value="{C170702F-6C98-4F69-BA0A-1A1A769513B9}"]').hide();
-        $('#crop option[value="{3A606884-25A1-444A-A7C8-3D9D777DC264}"]').hide();
-        $('#crop option[value="{01DEE8D9-826A-4CD8-B63B-5A2BF21BEC53}"]').hide();
-        $('#crop option[value="{9B52A786-FD73-4FF4-84B6-87BBDF09C13D}"]').hide();
-        //fertilizer
-        $('#crop option[value="{A4CCC7FD-2451-4309-A700-15D5CB4807C6}"]').show();
-        $('#crop option[value="{F543EB92-1D0C-48DA-8B6B-79988920FB1C}"]').show();
-        $('#crop option[value="{6FD52381-D7BD-4619-A31B-80B764E12322}"]').show();
-        $('#crop option[value="{E35800DA-E921-4E72-B86D-A362DE128360}"]').show();
-        $('#crop option[value="{302A305D-F640-4989-901A-A76FA9FD54FD}"]').show();
-        $('#crop option[value="{6B3764D8-E457-4A1E-868C-B398A84CE5D2}"]').show();
-        $('#crop option[value="{7669A139-1ED3-4623-B43D-E6944E4753FA}"]').show();
-        //dizel
-        $('#crop option[value="{0A9C4C52-AA5F-4994-98D3-65ED0457F9F8}"]').hide();
-      }
-      else if($("#dizel").prop("checked")) {
-        //crop
-        $('#crop option[value="{957D4230-1633-431B-B216-6F2FE7BEE262}"]').hide();
-        $('#crop option[value="{4F419C20-BF07-44C1-917A-6ACF737EBB21}"]').hide();
-        $('#crop option[value="{05207002-83C5-4F0A-BB27-14CCE15AA75C}"]').hide();
-        $('#crop option[value="{AAFCDB26-F98A-4635-A29D-5F611BFAD055}"]').hide();
-        $('#crop option[value="{557EEFFD-0EE1-44ED-AD4A-78F12DA44EAC}"]').hide();
-        $('#crop option[value="{1BC93D91-BCA0-460B-9874-719DE5554B6D}"]').hide();
-        $('#crop option[value="{79F5AA2E-49F2-4372-89FB-B770E39D70E7}"]').hide();
-        $('#crop option[value="{98A58A73-A5D4-44E4-B3AB-3BFEE8FDDFFD}"]').hide();
-        $('#crop option[value="{6657D554-F8F4-4173-A91B-DCA81C7EE5FE}"]').hide();
-        $('#crop option[value="{7340BDF2-0257-4E2E-AC9B-C2D30B647C56}"]').hide();
-        $('#crop option[value="{28A0663C-25AE-4946-8146-7A30AE03F6DE}"]').hide();
-        $('#crop option[value="{D1AE2497-92AF-4CB9-9ABC-C379DC80BF10}"]').hide();
-        $('#crop option[value="{C170702F-6C98-4F69-BA0A-1A1A769513B9}"]').hide();
-        $('#crop option[value="{3A606884-25A1-444A-A7C8-3D9D777DC264}"]').hide();
-        $('#crop option[value="{01DEE8D9-826A-4CD8-B63B-5A2BF21BEC53}"]').hide();
-        $('#crop option[value="{9B52A786-FD73-4FF4-84B6-87BBDF09C13D}"]').hide();
-        //fertilizer
-        $('#crop option[value="{A4CCC7FD-2451-4309-A700-15D5CB4807C6}"]').hide();
-        $('#crop option[value="{F543EB92-1D0C-48DA-8B6B-79988920FB1C}"]').hide();
-        $('#crop option[value="{6FD52381-D7BD-4619-A31B-80B764E12322}"]').hide();
-        $('#crop option[value="{E35800DA-E921-4E72-B86D-A362DE128360}"]').hide();
-        $('#crop option[value="{302A305D-F640-4989-901A-A76FA9FD54FD}"]').hide();
-        $('#crop option[value="{6B3764D8-E457-4A1E-868C-B398A84CE5D2}"]').hide();
-        $('#crop option[value="{7669A139-1ED3-4623-B43D-E6944E4753FA}"]').hide();
-        //dizel
-        $('#crop option[value="{0A9C4C52-AA5F-4994-98D3-65ED0457F9F8}"]').show();
-      }
-      else if($("#vse").prop("checked")) {
-        //crop
-        $('#crop option[value="{957D4230-1633-431B-B216-6F2FE7BEE262}"]').show();
-        $('#crop option[value="{4F419C20-BF07-44C1-917A-6ACF737EBB21}"]').show();
-        $('#crop option[value="{05207002-83C5-4F0A-BB27-14CCE15AA75C}"]').show();
-        $('#crop option[value="{AAFCDB26-F98A-4635-A29D-5F611BFAD055}"]').show();
-        $('#crop option[value="{557EEFFD-0EE1-44ED-AD4A-78F12DA44EAC}"]').show();
-        $('#crop option[value="{1BC93D91-BCA0-460B-9874-719DE5554B6D}"]').show();
-        $('#crop option[value="{79F5AA2E-49F2-4372-89FB-B770E39D70E7}"]').show();
-        $('#crop option[value="{98A58A73-A5D4-44E4-B3AB-3BFEE8FDDFFD}"]').show();
-        $('#crop option[value="{6657D554-F8F4-4173-A91B-DCA81C7EE5FE}"]').show();
-        $('#crop option[value="{7340BDF2-0257-4E2E-AC9B-C2D30B647C56}"]').show();
-        $('#crop option[value="{28A0663C-25AE-4946-8146-7A30AE03F6DE}"]').show();
-        $('#crop option[value="{D1AE2497-92AF-4CB9-9ABC-C379DC80BF10}"]').show();
-        $('#crop option[value="{C170702F-6C98-4F69-BA0A-1A1A769513B9}"]').show();
-        $('#crop option[value="{3A606884-25A1-444A-A7C8-3D9D777DC264}"]').show();
-        $('#crop option[value="{01DEE8D9-826A-4CD8-B63B-5A2BF21BEC53}"]').show();
-        $('#crop option[value="{9B52A786-FD73-4FF4-84B6-87BBDF09C13D}"]').show();
-        //fertilizer
-        $('#crop option[value="{A4CCC7FD-2451-4309-A700-15D5CB4807C6}"]').show();
-        $('#crop option[value="{F543EB92-1D0C-48DA-8B6B-79988920FB1C}"]').show();
-        $('#crop option[value="{6FD52381-D7BD-4619-A31B-80B764E12322}"]').show();
-        $('#crop option[value="{E35800DA-E921-4E72-B86D-A362DE128360}"]').show();
-        $('#crop option[value="{302A305D-F640-4989-901A-A76FA9FD54FD}"]').show();
-        $('#crop option[value="{6B3764D8-E457-4A1E-868C-B398A84CE5D2}"]').show();
-        $('#crop option[value="{7669A139-1ED3-4623-B43D-E6944E4753FA}"]').show();
-        //dizel
-        $('#crop option[value="{0A9C4C52-AA5F-4994-98D3-65ED0457F9F8}"]').show();
-      }
-    }
-  </script>                                                                                                                                      
+</div>                                                                                                                                       
 </body>
 <script type="text/javascript">
+//  Added 050719 begin. //////////////////////////////////////
+        var arrcrop = new Array();
+        var arridKeeper = new Array();
+        var arridGrouping = new Array();
+
+        $(document).ready(function () {
+            $('select#crop option').each(function (index, element) {
+                arrcrop.push($(this).val());
+            });
+
+            $('select#idKeeper option').each(function (index, element) {
+                arridKeeper.push($(this).val());
+            });
+
+            $('select#idGrouping option').each(function (index, element) {
+                arridGrouping.push($(this).val());
+            });
+        });
+
+    function myClick(idElem) {
+        if (idElem ==='crop')
+            $('#' + idElem).prop('size', arrcrop.length);
+        else if (idElem ==='idKeeper')
+            $('#' + idElem).prop('size', arridKeeper.length);
+        else
+            $('#' + idElem).prop('size', arridGrouping.length);
+        $('#'+idElem).css('overflow-y', 'hidden');
+    };
+
+    function myBlur(idElem) {
+            $('#'+idElem).prop('size', 1);
+    };
+
+    function wheelChangeidKeeper(e) {
+            e = e || window.event;
+            var delta = e.deltaY;
+            var currentIndex = arridKeeper.indexOf($('#idKeeper').val());
+            if (delta < 0 && currentIndex > 0) 
+                $('#idKeeper').val(arridKeeper[currentIndex-1]);
+            else if (delta > 0 && currentIndex < arridKeeper.length-1)
+                $('#idKeeper').val(arridKeeper[currentIndex + 1]);
+            e.preventDefault ? e.preventDefault() : (e.returnValue = false);
+    };
+
+    function wheelChangecrop(e) {
+            e = e || window.event;
+            var delta = e.deltaY;
+            var currentIndex = arrcrop.indexOf($('#crop').val());
+            if (delta < 0 && currentIndex > 0) 
+                $('#crop').val(arrcrop[currentIndex-1]);
+            else if (delta > 0 && currentIndex < arrcrop.length-1)
+                $('#crop').val(arrcrop[currentIndex + 1]);
+            e.preventDefault ? e.preventDefault() : (e.returnValue = false);
+    };
+
+    function wheelChangeidGrouping(e) {
+            e = e || window.event;
+            var delta = e.deltaY;
+            var currentIndex = arridGrouping.indexOf($('#idGrouping').val());
+            if (delta < 0 && currentIndex > 0) 
+                $('#idGrouping').val(arridGrouping[currentIndex-1]);
+            else if (delta > 0 && currentIndex < arridGrouping.length-1)
+                $('#idGrouping').val(arridGrouping[currentIndex + 1]);
+            e.preventDefault ? e.preventDefault() : (e.returnValue = false);
+    };
+//  Added 050719 end. //////////////////////////////////////
+
 var ctx = document.getElementById('bar-chart-grouped').getContext('2d');
 document.getElementById('bar-chart-grouped').style.height = (chartData[0].length * 110 + 200) + 'px';
 
@@ -439,6 +380,4 @@ new Chart(ctx, {
 });
 
 </script>
-
-
 </html>

@@ -192,13 +192,17 @@ if (s!='') {
   if (Session.Contents("Istreaty")==true || Session.Contents("Isjurist")==true) {
     result+='<li><a href="repDebetors.asp" target="_blank">Просроченные дебеторы</a>';
   }
+  if (Session.Contents("Isbank")==true) {
+	result+='<li><a href="cf.asp" target="_blank">Кэш флоу (TEST)</a>';
+    result+='<li><a href="sbd.asp" target="_blank">Товарные остатки</a>';
+  }
   if ((Session.Contents("Isboss")==true)||(Session.Contents("Islogist")==true)||(Session.Contents("Ismanager")==true)) {
     result+='<li><a href="repContractQuota.asp" target="_blank">Квоты</a>';
 	result+='<li><a href="conman.asp" target="_blank">Поставки на контракты (торговцы и элеваторы)</a>';
 	result+='<li><a href="repPortRests.asp" target="_blank">Остатки товара в портах (таблица)</a>';
 	result+='<li><a href="repPortRestsGraph.asp" target="_blank">Остатки товара в портах (график)</a>';
     result+='<li><a href="elev.asp" target="_blank">Остатки на элеваторах</a>';
-    result+='<li><a href="elevByRegion.asp" target="_blank">Остатки на элеваторах (по областям)</a>';
+//    result+='<li><a href="elevFilt.asp" target="_blank">Остатки удобрений</a>';
     result+='<li><a href="elevin.asp" target="_blank">Поступления на элеваторы (нал/безнал)</a>';
     result+='<li><a href="elev41.asp" target="_blank">Остатки чужого товара на элеваторах</a>';
   }

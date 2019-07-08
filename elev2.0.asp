@@ -55,6 +55,14 @@ if (keeperType!='') {ptype="'"+keeperType+"'"};
 if (keeper!='') {pkeeper="'"+keeper+"'"};
 %>
 <script type="text/javascript">
+ function ai(x,y,yRound,label,legend,val){this.x=x; this.y=y; this.indexLabelFormatter= function (e) { return  yRound; }; 
+										  this.label=label; this.indexLabel = ''+y; this.legend=legend; this.val=val;}
+var items0 = new Array();
+var items1 = new Array();
+var items2 = new Array();
+var items3 = new Array();
+var items4 = new Array();
+var items5 = new Array();
 var labels = new Array();
 var startRests = new Array();
 var endRests = new Array();
@@ -159,6 +167,18 @@ var n = this,
       var ss = rs('avgprice').value!=0?Math.round(1.0*rs('avgprice').value):0;
 	  var priceNDS = rs('avgpriceNDS').value!=0?Math.round(1.0*rs('avgpriceNDS').value):0;
       var ename = rs('elevatorname').value;
+	  %>items0[<%=i%>]=new ai(<%=j+25%>,<%=0%>,<%=0%>,'<%=ename%>');
+<%
+      %>items1[<%=i%>]=new ai(<%=j%>,<%=(1.0*rs('amount1').value).formatMoney(3, '.', '')%>,<%=(1.0*rs('amount1').value).formatMoney(0, '.', '')%>,'<%=ename%>','Остатки на <%=since%>','т');
+<%
+      %>items2[<%=i%>]=new ai(<%=j%>,<%=(1.0*rs('amount2').value).formatMoney(3, '.', '')%>,<%=(1.0*rs('amount2').value).formatMoney(0, '.', '')%>,'<%=ename%>','Остатки на <%=till%>','т');
+<%
+      %>items3[<%=i%>]=new ai(<%=j%>,<%=(1.0*rs('inp').value).formatMoney(3, '.', '')%>,<%=(1.0*rs('inp').value).formatMoney(0, '.', '')%>,'<%=ename%>','Поступило c <%=since%> по <%=till%>','т');
+<%
+      %>items4[<%=i%>]=new ai(<%=j%>,<%=ss%>,<%=ss%>,'<%=ename%>','Цена без НДС','грн');
+<%      
+	  %>items5[<%=i%>]=new ai(<%=j%>,<%=priceNDS%>,<%=priceNDS%>,'<%=ename%>','Цена с НДС','грн');
+<%	  
 	  %>startRests[<%=i%>]=<%=(1.0*rs('amount1').value).formatMoney(3, '.', '')%>;
 <%
 	  %>endRests[<%=i%>]=<%=(1.0*rs('amount2').value).formatMoney(3, '.', '')%>;
@@ -204,39 +224,38 @@ new Chart(ctx, {
       labels: labels,
       datasets: [
         {
-          label: "Остатки на <%=since%>: <%=amount1%> т   ",
+          label: "Остатки на <%=since%>: <%=amount1%> т",
 		  xAxisID: 'A',
 		  position: 'bottom',
-		  fontSize: 26,
-          backgroundColor: "#c24642",
+          backgroundColor: "#f62020",
 		  datalabels: {	align: 'end',	anchor: 'end'},
           data: startRests
         },
         {
-          label: "Остатки на <%=till%>: <%=amount2%> т   ",
+          label: "Остатки на <%=till%>: <%=amount2%> т",
 		  xAxisID: 'A',
-          backgroundColor: "#7f6084",
+          backgroundColor: "#a91c80",
 		  datalabels: {	align: 'end',	anchor: 'end'},
           data: endRests
         },
         {
-          label: "Поступило за период с <%=since%> по <%=till%>: <%=inp%> т   ",
+          label: "Поступило за период с <%=since%> по <%=till%>: <%=inp%> т",
 		  xAxisID: 'A',
-          backgroundColor: "#64a333",
+          backgroundColor: "#61ce2a",
 		  datalabels: {	align: 'end',	anchor: 'end'},
           data: input
         },
         {
-          label: "Цена без НДС: <%=avgprice%> грн   ",
+          label: "Цена без НДС: <%=avgprice%> грн",
 		  xAxisID: 'B',
-          backgroundColor: "#add8e6",
+          backgroundColor: "#c5c5c5",
 		  datalabels: {	align: 'end',	anchor: 'end'},
           data: price
         },
         {
-          label: "Цена c НДС: <%=avgpriceNDS%> грн   ",
+          label: "Цена c НДС: <%=avgpriceNDS%> грн",
 		  xAxisID: 'B',
-          backgroundColor: "#7998a1",
+          backgroundColor: "#606060",
 		  datalabels: {	align: 'end',	anchor: 'end'},
           data: ndsPrice
         }
@@ -245,11 +264,7 @@ new Chart(ctx, {
     options: {
 		devicePixelRatio: 1,
 		legend: {
-			position: 'bottom',            
-			labels: {
-				fontSize: 20,
-                fontColor: '#000'
-            }
+			position: 'bottom',
 		},
 		title: {
 				display: true,
@@ -289,18 +304,10 @@ new Chart(ctx, {
 						formatter: Math.round
 					},
 					chartJsPluginBarchartBackground: {
-							color: '#fcf09d',
+							color: '#ffcd6e',
 							mode: 'odd'
 					}
-				},
-        tooltips: {
-            callbacks: {
-                label: function(tooltipItem, data) {
-                    var label = data.datasets[tooltipItem.datasetIndex].label.split(":")[0] + ': ' + tooltipItem.xLabel;
-                    return label;
-                }
-            }
-        }
+				}
     }
 });
 
