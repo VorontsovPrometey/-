@@ -157,8 +157,9 @@ td+td+td+td {text-align:right;}
 <th>Остаток квоты, т</th> 
 <th>Фактически поставлено, т</th> 
 <th>Осталось поставить, т</th> 
-<th>Цена продажи, грн</th> 
+<!--<th>Цена продажи, грн</th> 
 <th>Цена продажи, валюта</th> 
+-->
 </tr>
 </thead>
 <%
@@ -253,8 +254,6 @@ var n = this,
 <%
 	}
 %>
-<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=price%></td>
-<td class="<%=levl==0 && rest==0?'zeroquote':''%>"><%=valprice%>&nbsp;<%=curname%></td>
 </tr>
 <%
       rs.MoveNext();

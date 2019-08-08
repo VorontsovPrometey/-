@@ -44,7 +44,6 @@ if (till!='') {ptill="'"+dateToSQL(till)+"'"};
 function ai(x,y,label){this.x=x; this.y=y; this.label=label; this.indexLabel = y!=0?''+y:'';}
 var items1 = new Array();
 var items2 = new Array();
-var items3 = new Array();
 </script>
 </head>
 <body>
@@ -57,7 +56,7 @@ var items3 = new Array();
 // выполняем и запоминаем
   var conn=null;
 
-  var sql="exec repElevatorsInput "+psince+","+ptill+","+pgoods;
+  var sql="exec repNakloutElev "+psince+","+ptill+","+pgoods;
   try {
     conn=getConnection(false);
     conn.CommandTimeout=160;
@@ -73,7 +72,7 @@ var items3 = new Array();
       amount2=amounttotal-amount1;
     };
 %>
-<form name="criteria" action="elevin.asp" method="POST">
+<form name="criteria" action="elevout.asp" method="POST">
 <fieldset>
 с&nbsp;<input class="date" type=Text name="since" size=5 maxlength=10 value="<%=dateToStr(since) %>"> 
 по&nbsp;<input class="date" type=Text name="till" size=5 maxlength=10 value="<%=dateToStr(till) %>">
@@ -127,12 +126,12 @@ var items3 = new Array();
 		fontSize: 30
       },
       axisY2: {
-        title:"Поступило на элеваторы,т ",
+        title:"Продали с элеваторов,т ",
 		titleFontSize: 24,
       },
       animationEnabled: true,
       axisY: {
-        title: "Поступило на элеваторы <%=amounttotal%>т",
+        title: "Продали с элеваторов <%=amounttotal%>т",
 		titleFontSize: 24,
         labelFontSize: 18
       },
