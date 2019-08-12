@@ -202,9 +202,10 @@ if (s!='') {
 	result+='<li><a href="repPortRests.asp" target="_blank">Остатки товара в портах (таблица)</a>';
 	result+='<li><a href="repPortRestsGraph.asp" target="_blank">Остатки товара в портах (график)</a>';
     result+='<li><a href="elev.asp" target="_blank">Остатки на элеваторах</a>';
+	result+='<li><a href="elevRestsUnits.asp" target="_blank">Остатки на элеваторах с разделением по таре</a>'; // добавлено 080819
 //    result+='<li><a href="elevFilt.asp" target="_blank">Остатки удобрений</a>';
     result+='<li><a href="elevin.asp" target="_blank">Поступления на элеваторы (нал/безнал)</a>';
-	result+='<li><a href="elevout.asp" target="_blank">Реализация удобрений и дизтоплива (нал/безнал)</a>';	//добавлено 290719
+	result+='<li><a href="elevout.asp" target="_blank">Реализация удобрений и дизтоплива (нал/безнал)</a>';	// добавлено 290719
     result+='<li><a href="elev41.asp" target="_blank">Остатки чужого товара на элеваторах</a>';
   }
   if (Session.Contents("Ismanager")==true) 
