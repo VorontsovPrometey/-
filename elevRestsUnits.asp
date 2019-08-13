@@ -158,10 +158,17 @@
                 var ss = rs('avgprice').value != 0 ? Math.round(1.0 * rs('avgprice').value) : 0;
                 var priceNDS = rs('avgpriceNDS').value != 0 ? Math.round(1.0 * rs('avgpriceNDS').value) : 0;
 
-                var sumMeshkiCurrent = rs('units1').value != 0 ? (1.0 * rs('units1').value / rs('avgprice').value) : 0;
-                var sumBagsCurrent = rs('units2').value != 0 ? (1.0 * rs('units2').value / rs('avgprice').value) : 0;
-                sumMeshki += Math.round(sumMeshkiCurrent * 1000) / 1000;
-                sumBags += Math.round(sumBagsCurrent * 1000) / 1000;
+                if (ss == 0) {
+                    var sumMeshkiCurrent = 0;
+                    var sumBagsCurrent = 0;
+                }
+                else {
+                    var sumMeshkiCurrent = rs('units1').value != 0 ? (1.0 * rs('units1').value / rs('avgprice').value) : 0;
+                    var sumBagsCurrent = rs('units2').value != 0 ? (1.0 * rs('units2').value / rs('avgprice').value) : 0;
+                    sumMeshki += Math.round(sumMeshkiCurrent * 1000) / 1000;
+                    sumBags += Math.round(sumBagsCurrent * 1000) / 1000;
+                }
+
 	  %> chartData[0][<%=i %>]='<%=rs('elevatorname').value%>';
 <%
 	  %> chartData[1][<%=i %>]=<%=(1.0 * rs('amount1').value).formatMoney(3, '.', '') %>;
@@ -263,7 +270,7 @@
     var ctx = document.getElementById('bar-chart-grouped').getContext('2d');
     document.getElementById('bar-chart-grouped').style.height = (chartData[0].length * 110 + 200) + 'px';
 
-    var maxRestn = Math.round((Math.max(Math.max(...chartData[1], ...chartData[2], ...chartData[3], ...chartData[7], ...chartData[8]), Math.abs(Math.min(...chartData[1], ...chartData[2], ...chartData[3], ...chartData[7], ...chartData[8]))) *115) / 100);    //было *115
+    var maxRestn = Math.round((Math.max(Math.max(...chartData[1], ...chartData[2], ...chartData[3]), Math.abs(Math.min(...chartData[1], ...chartData[2], ...chartData[3]))) *115) / 100);    //было *115
     var maxPricen = Math.round((Math.max(Math.max(...chartData[5], ...chartData[6]), Math.abs(Math.min(...chartData[5], ...chartData[6]))) * 115) / 100);
 
     var totalrest = 0;
