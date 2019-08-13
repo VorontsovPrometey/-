@@ -297,14 +297,14 @@
                     data: chartData[2]
                 },
                 {
-                    label: " - в.т.ч. Мешки: <%=sumMeshki%>",
+                    label: " - в.т.ч. Мешки: <%=sumMeshki%> т",
                     xAxisID: 'A',
                     backgroundColor: "#1d223d",
                     datalabels: { align: 'end', anchor: 'end' },
                     data: chartData[7]
                 },
                 {
-                    label: " - в.т.ч. Беги: <%=sumBags%>",
+                    label: " - в.т.ч. Беги: <%=sumBags%> т",
                     xAxisID: 'A',
                     backgroundColor: "#572ad4",
                     datalabels: { align: 'end', anchor: 'end' },
