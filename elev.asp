@@ -25,7 +25,11 @@ var goods=''
 var till=new Date();
 var keeperType='';
 var keeper='';
-var grouping='';
+var grouping='0';
+if(''+Request.QueryString("type")!='undefined')
+{
+	grouping='1';
+}
 if ((s.indexOf('POST')>=0)&&(''+Request.Form("till")!='undefined')) {
   till=parseDate(""+Request.Form("till"));
 } else {
@@ -60,7 +64,7 @@ if (since!='') {psince="'"+dateToSQL(since)+"'"};
 if (till!='') {ptill="'"+dateToSQL(till)+"'"};
 if (keeperType!='') {ptype="'"+keeperType+"'"};
 if (keeper!='') {pkeeper="'"+keeper+"'"};
-if (grouping!='') {pgrouping="'"+grouping+"'"};
+pgrouping="'"+grouping+"'";
 
 Number.prototype.formatMoney = function(c, d, t){
 var n = this, 
@@ -257,16 +261,18 @@ var maxRestn = Math.round((Math.max(Math.max(...chartData[1], ...chartData[2], .
 var maxPricen =Math.round((Math.max(Math.max(...chartData[5], ...chartData[6]), Math.abs(Math.min(...chartData[5], ...chartData[6]))) * 115) / 100);
 
 var totalrest = 0;
-var debt = 0;
-
+    var debt = 0;
+    var expression = '';//////////
 for (var i = 0; i < chartData[2].length; i++)	{
 	if	(chartData[2][i] > 0)	totalrest += chartData[2][i];
 	if	(chartData[2][i] < 0)	debt += chartData[2][i];
 }
 
 totalrest = Math.round(totalrest * 1000) / 1000;
-debt = Math.round(debt * 1000) / 1000;
-
+    debt = Math.round(debt * 1000) / 1000;
+    if ($('#idGrouping').val() != 1) {
+        expression = "(Общий остаток: " + totalrest + "  Общий долг: " + debt + ")"; 
+    }
 new Chart(ctx, {
     type: 'horizontalBar',
     data: {
@@ -329,7 +335,7 @@ new Chart(ctx, {
 				display: true,
 				fontSize: 26,
 				fontColor: '#000',
-				text: "<%=goodsname%> " + "(Общий остаток: " + totalrest + "  Общий долг: " + debt + ")"
+            text: "<%=goodsname%>" +expression	  //" + "(Общий остаток: " + totalrest + "  Общий долг: " + debt + ")"
 		},
         elements: {
           rectangle: {

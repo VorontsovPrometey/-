@@ -216,7 +216,9 @@ Response.Write('<colgroup>'
 
 </tbody>
 </table>
-<a href="elev.asp" target="_blank">Остатки на элеваторах</a>
+<a href="elev.asp" target="_blank">Остатки на элеваторах (по элеваторам)</a>
+<br/>
+<a href="elev.asp?type=1" target="_blank">Остатки на элеваторах (по областям)</a>
 <br/>
 <ul>
 <%

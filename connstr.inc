@@ -184,7 +184,7 @@ if (s!='') {
   if (url=='default') {result+='<li><a href="newpwd.asp">Сменить пароль</a>';};
   if (Session.Contents("Istopmanager")==true) 
   { result+='<li><a href="delta2.asp" target="_blank">Дельта</a>';
-    result+='<li><a href="costincomnew.asp" target="_blank">Прибыль текущая</a>';
+  //  result+='<li><a href="costincomnew.asp" target="_blank">Прибыль текущая</a>';	// Удалено 270819
     result+='<li><a href="costincomprofit.asp" target="_blank">Прибыль по закр. контрактам</a>';
 //    result+='<li><a href="auto3.asp"  target="_blank">Содержание авто</a>';
     result+='<li><a href="repDebetors.asp" target="_blank">Просроченные дебеторы</a>';
@@ -202,11 +202,14 @@ if (s!='') {
 	result+='<li><a href="repPortRests.asp" target="_blank">Остатки товара в портах (таблица)</a>';
 	result+='<li><a href="repPortRestsGraph.asp" target="_blank">Остатки товара в портах (график)</a>';
     result+='<li><a href="elev.asp" target="_blank">Остатки на элеваторах</a>';
-	result+='<li><a href="elevRestsUnits.asp" target="_blank">Остатки на элеваторах с разделением по таре</a>'; // добавлено 080819
+	result+='<li><a href="elev.asp?type=1" target="_blank">Остатки на элеваторах регионы</a>';
+	result+='<li><a href="elevAnother.asp" target="_blank">Остатки на элеваторах по чужим хранителям</a>';	// добавлено 270919
+	result+='<li><a href="elevFerRests.asp" target="_blank">Наличие товара на элеваторах</a>';	// добавлено 101019
+//	result+='<li><a href="elevRestsUnits.asp" target="_blank">Остатки на элеваторах с разделением по таре</a>'; // добавлено 080819 и удалено 270819
 //    result+='<li><a href="elevFilt.asp" target="_blank">Остатки удобрений</a>';
     result+='<li><a href="elevin.asp" target="_blank">Поступления на элеваторы (нал/безнал)</a>';
 	result+='<li><a href="elevout.asp" target="_blank">Реализация удобрений и дизтоплива (нал/безнал)</a>';	// добавлено 290719
-    result+='<li><a href="elev41.asp" target="_blank">Остатки чужого товара на элеваторах</a>';
+//    result+='<li><a href="elev41.asp" target="_blank">Остатки чужого товара на элеваторах</a>';	// убрано 011019
   }
   if (Session.Contents("Ismanager")==true) 
   { 
